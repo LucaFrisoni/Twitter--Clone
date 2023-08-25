@@ -24,7 +24,7 @@ const NotificationsFeed = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [user]);
+  }, [user, fetchNotifications]);
 
   if (notifications.length == 0) {
     return (

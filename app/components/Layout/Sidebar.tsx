@@ -35,7 +35,7 @@ const Sidebar = () => {
       fetchUser();
     }
     // Llamar a "fetchUser" dentro de "useEffect" para que se ejecute después del montaje.
-  }, [session]);
+  }, [session, fetchUser]);
 
   const items = [
     {

@@ -26,7 +26,7 @@ const PostVieww = ({ postId }: PostViewwProps) => {
 
   useEffect(() => {
     fetchPost();
-  }, [postId, post]);
+  }, [postId, post, fetchPost]);
 
   if (isLoading || !post) {
     return (
