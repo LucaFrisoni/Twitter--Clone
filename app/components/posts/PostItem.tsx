@@ -88,7 +88,7 @@ useEffect(() => {
         toast.error("Something went wrong");
       }
     },
-    [loginModal, user, data.id, router, isLiked]
+    [loginModal, user, data.id, router, isLiked, session]
   );
 
   const createdAt = useMemo(() => {
@@ -96,7 +96,7 @@ useEffect(() => {
       return null;
     }
     return formatDistanceToNowStrict(new Date(data.createdAt));
-  }, []);
+  }, [data.createdAt]);
 
   return (
     <div
