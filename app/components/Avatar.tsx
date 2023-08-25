@@ -38,7 +38,7 @@ const Avatar: React.FC<AvatarProps> = ({
   if (flag) {
     useEffect(() => {
       fetchUser(); // Llamar a "fetchUser" dentro de "useEffect" para que se ejecute después del montaje.
-    }, []);
+    }, [fetchUser]);
   }
 
   const onClick = useCallback(

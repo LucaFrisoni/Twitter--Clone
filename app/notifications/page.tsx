@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import NotificationsFeed from "../components/NotificationsFeed";
 
-const page = () => {
+const NotificationsView = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -21,4 +21,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default NotificationsView;

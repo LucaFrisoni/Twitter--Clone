@@ -3,6 +3,7 @@ import PostFeed from "@/app/components/posts/PostFeed";
 import UserBio from "@/app/components/users/UserBio";
 import UserHero from "@/app/components/users/UserHero";
 import { useUser } from "@/hooks/useUser";
+import axios from "axios";
 import React from "react";
 import { ClipLoader } from "react-spinners";
 
@@ -12,7 +13,8 @@ const UserView = async ({
 }: {
   params: { userId: string };
 }) => {
-  const user = await useUser(userId);
+  const { data } = await axios.get(`http://localhost:3000/api/users/${userId}`);
+  const user = data;
 
   if (!user) {
     return (
