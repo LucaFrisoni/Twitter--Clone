@@ -9,7 +9,7 @@ import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
 
 import { User } from "@/types";
-import { useUserEmail } from "@/hooks/useUser";
+
 
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "@/redux/actions";

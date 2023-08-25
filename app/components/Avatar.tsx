@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from "@/hooks/useUser";
+
 import { User } from "@/types";
 import axios from "axios";
 import Image from "next/image";

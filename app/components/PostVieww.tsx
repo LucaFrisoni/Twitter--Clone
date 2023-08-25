@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { usePost } from "@/hooks/usePostTweet";
+
 import { ClipLoader } from "react-spinners";
 import Header from "./Header";
 import PostItem from "./posts/PostItem";
