@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  @apply h-full bg-black;
+}
+
+body {
+  @apply h-full bg-black;
+}
+
+.hideslidder {
+  scrollbar-width: none; /* Oculta la barra de desplazamiento */
+}
+
+/* WebKit (Safari/Chrome) */
+.hideslidder::-webkit-scrollbar {
+  width: 0; /* Ancho de la barra de desplazamiento */
+  background-color: transparent; /* Color del fondo de la barra de desplazamiento */
+}
+
+/* Opcionalmente, puedes ajustar el color del pulgar en WebKit */
+.hideslidder::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Color del pulgar de la barra de desplazamiento */
+}
