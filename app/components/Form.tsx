@@ -1,10 +1,10 @@
 "use client";
-import { useUserEmail } from "@/hooks/useUser";
+
 import useLoginModel from "@/hooks/zustandHooks/useLoginModel";
 import useRegisterModal from "@/hooks/zustandHooks/useRegisterModal";
-import { User } from "@/types";
+
 import axios from "axios";
-import { useSession } from "next-auth/react";
+
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";

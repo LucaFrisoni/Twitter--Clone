@@ -1,22 +1,24 @@
 "use client";
 import { useNotification } from "@/hooks/useNotifications";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { useSelector } from "react-redux";
-export const revalidate = 0
+export const revalidate = 0;
 const NotificationsFeed = () => {
   const user = useSelector((state: any) => state.user);
-const router = useRouter()
+  const router = useRouter();
   const [notifications, setNotifications] = useState([]);
 
   const fetchNotifications = async () => {
     if (user) {
-      
-      let notificationss = await useNotification(user.id);
+      const { data } = await axios.get(
+        `http://localhost:3000/api/notifications/${user.id}`
+      );
+      let notificationss = data;
       console.log(notificationss);
       setNotifications(notificationss);
-   
     }
   };
 

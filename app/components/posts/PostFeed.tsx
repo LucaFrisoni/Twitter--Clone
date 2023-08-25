@@ -2,15 +2,23 @@ import { usePostTweet } from "@/hooks/usePostTweet";
 import React from "react";
 import PostItem from "./PostItem";
 import { Post } from "@/types";
+import axios from "axios";
 interface PostFeedProps {
   userId?: string;
 }
 
 const PostFeed: React.FC<PostFeedProps> = async ({ userId }) => {
- 
-  let usePostsTweet = await usePostTweet("get");
+  const { data: allPostsData } = await axios.get(
+    `http://localhost:3000/api/posts`
+  );
+
+  let usePostsTweet = allPostsData;
+
   if (userId) {
-    usePostsTweet = await usePostTweet("get", userId);
+    const { data: userPostsData } = await axios.get(
+      `http://localhost:3000/api/posts?userId=${userId}`
+    );
+    usePostsTweet = userPostsData;
   }
   // console.log("Post", usePostsTweet);
   return (

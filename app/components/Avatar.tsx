@@ -1,6 +1,7 @@
 "use client";
 import { useUser } from "@/hooks/useUser";
 import { User } from "@/types";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -26,7 +27,10 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const fetchUser = async () => {
     if (userId) {
-      const { user } = await useUser(userId);
+      const { data } = await axios.get(
+        `http://localhost:3000/api/users/${userId}`
+      );
+      const user = data;
       setUser(user);
     }
   };

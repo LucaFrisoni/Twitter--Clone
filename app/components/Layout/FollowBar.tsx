@@ -1,9 +1,10 @@
-import { useUsers } from "@/hooks/useUser";
 import React from "react";
 import Avatar from "../Avatar";
+import axios from "axios";
 export const revalidate = 0;
 const FollowBar = async () => {
-  const users = await useUsers();
+  const { data } = await axios.get("http://localhost:3000/api/users");
+  const users = data;
   if (users.length === 0) {
     return null;
   }

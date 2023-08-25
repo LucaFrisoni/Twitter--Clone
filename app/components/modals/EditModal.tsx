@@ -1,9 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+
 
 import useEditModel from "@/hooks/zustandHooks/useEditModel";
-import { useUserEmail } from "@/hooks/useUser";
 
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -11,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 import Modal from "../Modal";
 import Input from "../Input";
-import { User, Post, Comment, Notification } from "../../../types"; // Importa los tipos desde tu archivo types.ts
+
 import ImageUpload from "../ImageUpload";
 import { useSelector } from "react-redux";
 

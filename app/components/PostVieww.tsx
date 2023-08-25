@@ -6,23 +6,27 @@ import PostItem from "./posts/PostItem";
 import Form from "./Form";
 import { Post } from "@/types";
 import CommentFeed from "./posts/CommentFeed";
+import axios from "axios";
 interface PostViewwProps {
   postId: string;
 }
-export const revalidate = 0
+export const revalidate = 0;
 const PostVieww = ({ postId }: PostViewwProps) => {
   const [post, setPost] = useState<Post>();
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchPost = async () => {
-    const usePostt = await usePost(postId as string);
+    const { data } = await axios.get(
+      `http://localhost:3000/api/posts/${postId}`
+    );
+    const usePostt = data;
     setPost(usePostt);
     setIsLoading(false);
   };
 
   useEffect(() => {
     fetchPost();
-  }, [postId,post]);
+  }, [postId, post]);
 
   if (isLoading || !post) {
     return (
@@ -35,7 +39,10 @@ const PostVieww = ({ postId }: PostViewwProps) => {
     <>
       <Header label="Tweet" showBackArrow />
       <PostItem data={post} />
-      <Form postId={postId as string} isComment placeholder="Tweet your reply"
+      <Form
+        postId={postId as string}
+        isComment
+        placeholder="Tweet your reply"
       />
       <CommentFeed comments={post?.comments} />
     </>

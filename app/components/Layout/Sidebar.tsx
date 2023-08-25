@@ -13,17 +13,19 @@ import { useUserEmail } from "@/hooks/useUser";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "@/redux/actions";
+import axios from "axios";
 
 const Sidebar = () => {
   const { data: session, status } = useSession();
-
-
 
   const dispatch = useDispatch();
 
   const [user, setUserr] = useState<User | null>(null);
   const fetchUser = async () => {
-    const user = await useUserEmail(session?.user?.email);
+    const { data } = await axios.get(
+      `http://localhost:3000/api/users/email/${session?.user?.email}`
+    );
+    const user = data;
     setUserr(user);
     dispatch(setUser(user));
   };
