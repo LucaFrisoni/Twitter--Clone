@@ -49,7 +49,7 @@ const EditModal = () => {
     try {
       setIsLoading(true);
       const result = await axios.patch(
-        "https://litter-md12ayp50-lucafrisoni.vercel.app//api/edit",
+        "/api/edit",
         {
           email,
           name,

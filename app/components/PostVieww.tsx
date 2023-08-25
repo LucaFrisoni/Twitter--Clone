@@ -18,7 +18,7 @@ const PostVieww = ({ postId }: PostViewwProps) => {
   useEffect(() => {
     const fetchPost = async () => {
       const { data } = await axios.get(
-        `https://litter-md12ayp50-lucafrisoni.vercel.app/api/posts/${postId}`
+        `/api/posts/${postId}`
       );
       const usePostt = data;
       setPost(usePostt);

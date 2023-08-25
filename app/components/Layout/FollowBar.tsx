@@ -4,7 +4,7 @@ import axios from "axios";
 export const revalidate = 0;
 const FollowBar = async () => {
   const { data } = await axios.get(
-    "https://litter-md12ayp50-lucafrisoni.vercel.app//api/users"
+    "/api/users"
   );
   const users = data;
   if (users.length === 0) {

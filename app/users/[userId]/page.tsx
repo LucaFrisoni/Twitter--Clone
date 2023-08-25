@@ -14,7 +14,7 @@ const UserView = async ({
   params: { userId: string };
 }) => {
   const { data } = await axios.get(
-    `https://litter-md12ayp50-lucafrisoni.vercel.app/api/users/${userId}`
+    `/api/users/${userId}`
   );
   const user = data;
 

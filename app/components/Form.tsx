@@ -36,7 +36,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
 
       if (isComment) {
         await axios.post(
-          "https://litter-md12ayp50-lucafrisoni.vercel.app/api/comments",
+          "/api/comments",
           {
             body,
             postId,
@@ -50,7 +50,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
         return;
       }
       await axios.post(
-        "https://litter-md12ayp50-lucafrisoni.vercel.app/api/posts",
+        "/api/posts",
         { body, email }
       );
 

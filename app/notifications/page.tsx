@@ -10,7 +10,7 @@ const NotificationsView = () => {
   const { data: session, status } = useSession();
 
   if (!session) {
-    router.push("https://litter-md12ayp50-lucafrisoni.vercel.app/");
+    router.push("/");
   }
 
   return (

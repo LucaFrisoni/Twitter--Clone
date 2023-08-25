@@ -34,7 +34,7 @@ const RegisterModal = () => {
       //TODO ADD LOGIN
 
       await axios.post(
-        "https://litter-md12ayp50-lucafrisoni.vercel.app/api/register",
+        "/api/register",
         {
           email,
           password,

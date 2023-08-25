@@ -9,14 +9,14 @@ interface PostFeedProps {
 
 const PostFeed: React.FC<PostFeedProps> = async ({ userId }) => {
   const { data: allPostsData } = await axios.get(
-    `https://litter-md12ayp50-lucafrisoni.vercel.app/api/posts`
+    `/api/posts`
   );
 
   let usePostsTweet = allPostsData;
 
   if (userId) {
     const { data: userPostsData } = await axios.get(
-      `https://litter-md12ayp50-lucafrisoni.vercel.app/api/posts?userId=${userId}`
+      `/api/posts?userId=${userId}`
     );
     usePostsTweet = userPostsData;
   }

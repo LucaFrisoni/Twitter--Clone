@@ -32,7 +32,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
     (event: any) => {
       event.stopPropagation();
       router.push(
-        `https://litter-md12ayp50-lucafrisoni.vercel.app/users/${data.user?.id}`
+        `/users/${data.user?.id}`
       );
     },
     [router, data.user?.id]
@@ -52,7 +52,7 @@ useEffect(() => {
     (event: any) => {
       event.stopPropagation();
       router.push(
-        `https://litter-md12ayp50-lucafrisoni.vercel.app/posts/${data.id}`
+        `/posts/${data.id}`
       );
     },
     [router, data]
@@ -76,12 +76,12 @@ useEffect(() => {
       try {
         if (isLiked) {
           await axios.delete(
-            `http://localhost:3000/api/like?postId=${data.id}&currentUserId=${user?.id}`
+            `/api/like?postId=${data.id}&currentUserId=${user?.id}`
           );
           toast.success("Post Unliked");
           router.refresh();
         } else {
-          await axios.post("http://localhost:3000/api/like", {
+          await axios.post("/api/like", {
             postId: data.id,
             currentUserId: user.id,
           });
