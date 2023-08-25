@@ -3,9 +3,7 @@ import Avatar from "../Avatar";
 import axios from "axios";
 export const revalidate = 0;
 const FollowBar = async () => {
-  const { data } = await axios.get(
-    "/api/users"
-  );
+  const { data } = await axios.get("http://localhost:3000/api/users");
   const users = data;
   if (users.length === 0) {
     return null;

@@ -18,7 +18,7 @@ const PostVieww = ({ postId }: PostViewwProps) => {
   useEffect(() => {
     const fetchPost = async () => {
       const { data } = await axios.get(
-        `/api/posts/${postId}`
+        `http://localhost:3000/api/posts/${postId}`
       );
       const usePostt = data;
       setPost(usePostt);

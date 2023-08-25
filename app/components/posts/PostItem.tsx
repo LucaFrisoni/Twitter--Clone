@@ -76,12 +76,12 @@ useEffect(() => {
       try {
         if (isLiked) {
           await axios.delete(
-            `/api/like?postId=${data.id}&currentUserId=${user?.id}`
+            `http://localhost:3000/api/like?postId=${data.id}&currentUserId=${user?.id}`
           );
           toast.success("Post Unliked");
           router.refresh();
         } else {
-          await axios.post("/api/like", {
+          await axios.post("http://localhost:3000/api/like", {
             postId: data.id,
             currentUserId: user.id,
           });

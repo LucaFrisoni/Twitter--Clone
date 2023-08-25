@@ -9,14 +9,14 @@ interface PostFeedProps {
 
 const PostFeed: React.FC<PostFeedProps> = async ({ userId }) => {
   const { data: allPostsData } = await axios.get(
-    `/api/posts`
+    `http://localhost:3000/api/posts`
   );
 
   let usePostsTweet = allPostsData;
 
   if (userId) {
     const { data: userPostsData } = await axios.get(
-      `/api/posts?userId=${userId}`
+      `http://localhost:3000/api/posts?userId=${userId}`
     );
     usePostsTweet = userPostsData;
   }

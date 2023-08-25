@@ -15,9 +15,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data }) => {
     (event: any) => {
       // detiene el onclick del padre
       event.stopPropagation();
-      router.push(
-        `/users/${data.user?.id}`
-      );
+      router.push(`http://localhost:3000/users/${data.user?.id}`);
     },
     [router, data.user?.id]
   );

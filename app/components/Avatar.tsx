@@ -28,7 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const fetchUser = async () => {
     if (userId) {
       const { data } = await axios.get(
-        `/api/users/${userId}`
+        `http://localhost:3000/api/users/${userId}`
       );
       const user = data;
       setUser(user);
@@ -46,7 +46,7 @@ const Avatar: React.FC<AvatarProps> = ({
     (event: any) => {
       event.stopPropagation();
 
-      const url = `/users/${userId}`;
+      const url = `http://localhost:3000/users/${userId}`;
       router.push(url);
     },
     [router, userId]

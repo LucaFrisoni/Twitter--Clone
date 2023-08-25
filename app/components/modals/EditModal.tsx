@@ -48,17 +48,14 @@ const EditModal = () => {
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await axios.patch(
-        "/api/edit",
-        {
-          email,
-          name,
-          profileImage,
-          coverImage,
-          bio,
-          username,
-        }
-      );
+      const result = await axios.patch("http://localhost:3000/api/edit", {
+        email,
+        name,
+        profileImage,
+        coverImage,
+        bio,
+        username,
+      });
       editModal.onClose();
       router.refresh();
       toast.success("Update");

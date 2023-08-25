@@ -24,7 +24,7 @@ const Sidebar = () => {
     const fetchUser = useCallback(async () => {
       if (session) {
         const { data } = await axios.get(
-          `/api/users/email/${session?.user?.email}`
+          `http://localhost:3000/api/users/email/${session?.user?.email}`
         );
         const user = data;
         setUserr(user);
