@@ -48,14 +48,17 @@ const EditModal = () => {
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await axios.patch("http://localhost:3000/api/edit", {
-        email,
-        name,
-        profileImage,
-        coverImage,
-        bio,
-        username,
-      });
+      const result = await axios.patch(
+        "https://litter-md12ayp50-lucafrisoni.vercel.app//api/edit",
+        {
+          email,
+          name,
+          profileImage,
+          coverImage,
+          bio,
+          username,
+        }
+      );
       editModal.onClose();
       router.refresh();
       toast.success("Update");

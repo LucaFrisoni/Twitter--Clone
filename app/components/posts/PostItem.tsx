@@ -31,7 +31,9 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   const goToUser = useCallback(
     (event: any) => {
       event.stopPropagation();
-      router.push(`http://localhost:3000/users/${data.user?.id}`);
+      router.push(
+        `https://litter-md12ayp50-lucafrisoni.vercel.app/users/${data.user?.id}`
+      );
     },
     [router, data.user?.id]
   );
@@ -49,7 +51,9 @@ useEffect(() => {
   const goToPost = useCallback(
     (event: any) => {
       event.stopPropagation();
-      router.push(`http://localhost:3000/posts/${data.id}`);
+      router.push(
+        `https://litter-md12ayp50-lucafrisoni.vercel.app/posts/${data.id}`
+      );
     },
     [router, data]
   );

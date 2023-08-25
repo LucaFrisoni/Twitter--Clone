@@ -15,7 +15,9 @@ const CommentItem: React.FC<CommentItemProps> = ({ data }) => {
     (event: any) => {
       // detiene el onclick del padre
       event.stopPropagation();
-      router.push(`http://localhost:3000/users/${data.user?.id}`);
+      router.push(
+        `https://litter-md12ayp50-lucafrisoni.vercel.app/users/${data.user?.id}`
+      );
     },
     [router, data.user?.id]
   );

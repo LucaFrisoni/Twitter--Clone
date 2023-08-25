@@ -35,16 +35,19 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     try {
       if (isFollowing) {
         await axios.delete(
-          `http://localhost:3000/api/follow?userId=${user?.user.id}&currentUserId=${userr.id}`
+          `https://litter-md12ayp50-lucafrisoni.vercel.app/api/follow?userId=${user?.user.id}&currentUserId=${userr.id}`
         );
 
         toast.success("User Unfollowed");
         router.refresh();
       } else {
-        await axios.post("http://localhost:3000/api/follow", {
-          userId: user?.user.id,
-          currentUserId: userr.id,
-        });
+        await axios.post(
+          "https://litter-md12ayp50-lucafrisoni.vercel.app/api/follow",
+          {
+            userId: user?.user.id,
+            currentUserId: userr.id,
+          }
+        );
 
         toast.success("User Followed");
         router.refresh();

@@ -14,7 +14,7 @@ useEffect(() => {
   const fetchNotifications = async () => {
     if (user) {
       const { data } = await axios.get(
-        `http://localhost:3000/api/notifications/${user.id}`
+        `https://litter-md12ayp50-lucafrisoni.vercel.app/api/notifications/${user.id}`
       );
       let notificationss = data;
       console.log(notificationss);

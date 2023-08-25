@@ -24,7 +24,7 @@ const Sidebar = () => {
     const fetchUser = useCallback(async () => {
       if (session) {
         const { data } = await axios.get(
-          `http://localhost:3000/api/users/email/${session?.user?.email}`
+          `https://litter-md12ayp50-lucafrisoni.vercel.app/api/users/email/${session?.user?.email}`
         );
         const user = data;
         setUserr(user);

@@ -28,7 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const fetchUser = async () => {
     if (userId) {
       const { data } = await axios.get(
-        `http://localhost:3000/api/users/${userId}`
+        `https://litter-md12ayp50-lucafrisoni.vercel.app/api/users/${userId}`
       );
       const user = data;
       setUser(user);
@@ -46,7 +46,7 @@ const Avatar: React.FC<AvatarProps> = ({
     (event: any) => {
       event.stopPropagation();
 
-      const url = `http://localhost:3000/users/${userId}`;
+      const url = `https://litter-md12ayp50-lucafrisoni.vercel.app/users/${userId}`;
       router.push(url);
     },
     [router, userId]

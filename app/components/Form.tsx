@@ -35,18 +35,24 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       const email = user?.email;
 
       if (isComment) {
-        await axios.post("http://localhost:3000/api/comments", {
-          body,
-          postId,
-          currentUserId: user.id,
-        });
+        await axios.post(
+          "https://litter-md12ayp50-lucafrisoni.vercel.app/api/comments",
+          {
+            body,
+            postId,
+            currentUserId: user.id,
+          }
+        );
         toast.success("Comment Created");
         setBody("");
         router.refresh();
         setIsLoading(false);
         return;
       }
-      await axios.post("http://localhost:3000/api/posts", { body, email });
+      await axios.post(
+        "https://litter-md12ayp50-lucafrisoni.vercel.app/api/posts",
+        { body, email }
+      );
 
       toast.success("Tweet Created");
       setBody("");
