@@ -1,4 +1,4 @@
-import { usePostTweet } from "@/hooks/usePostTweet";
+
 import React from "react";
 import PostItem from "./PostItem";
 import { Post } from "@/types";
