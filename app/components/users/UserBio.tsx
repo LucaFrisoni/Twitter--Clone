@@ -52,7 +52,7 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     } catch (error) {
       toast.error("Something went wrong");
     }
-  }, [user, userr, isFollowing, loginModal, router]);
+  }, [user, userr, isFollowing, loginModal, router, session]);
 
   const createdAt = useMemo(() => {
     return format(new Date(user?.user.createdAt), "MMMM yyyy");

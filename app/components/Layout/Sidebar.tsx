@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { BsHouseFill, BsBellFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
@@ -21,21 +21,20 @@ const Sidebar = () => {
   const dispatch = useDispatch();
 
   const [user, setUserr] = useState<User | null>(null);
-  const fetchUser = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3000/api/users/email/${session?.user?.email}`
-    );
-    const user = data;
-    setUserr(user);
-    dispatch(setUser(user));
-  };
+    const fetchUser = useCallback(async () => {
+      if (session) {
+        const { data } = await axios.get(
+          `http://localhost:3000/api/users/email/${session?.user?.email}`
+        );
+        const user = data;
+        setUserr(user);
+        dispatch(setUser(user));
+      }
+    }, [session, dispatch]);
 
-  useEffect(() => {
-    if (session) {
-      fetchUser();
-    }
-    // Llamar a "fetchUser" dentro de "useEffect" para que se ejecute después del montaje.
-  }, [session, fetchUser]);
+    useEffect(() => {
+      fetchUser(); // Llamamos a la función aquí dentro del useEffect
+    }, [fetchUser]);
 
   const items = [
     {

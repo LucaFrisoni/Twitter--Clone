@@ -15,18 +15,18 @@ const PostVieww = ({ postId }: PostViewwProps) => {
   const [post, setPost] = useState<Post>();
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchPost = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3000/api/posts/${postId}`
-    );
-    const usePostt = data;
-    setPost(usePostt);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPost = async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/posts/${postId}`
+      );
+      const usePostt = data;
+      setPost(usePostt);
+      setIsLoading(false);
+    };
+
     fetchPost();
-  }, [postId, post, fetchPost]);
+  }, [postId]);
 
   if (isLoading || !post) {
     return (

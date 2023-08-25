@@ -1,5 +1,4 @@
 "use client";
-import { useNotification } from "@/hooks/useNotifications";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ const NotificationsFeed = () => {
   const router = useRouter();
   const [notifications, setNotifications] = useState([]);
 
+useEffect(() => {
   const fetchNotifications = async () => {
     if (user) {
       const { data } = await axios.get(
@@ -22,9 +22,8 @@ const NotificationsFeed = () => {
     }
   };
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [user, fetchNotifications]);
+  fetchNotifications();
+}, [user]);
 
   if (notifications.length == 0) {
     return (
