@@ -13,7 +13,9 @@ const UserView = async ({
 }: {
   params: { userId: string };
 }) => {
-  const { data } = await axios.get(`http://localhost:3000/api/users/${userId}`);
+  const { data } = await axios.get(
+    `http://localhost:3000/api/users/${userId}`
+  );
   const user = data;
 
   if (!user) {

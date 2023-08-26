@@ -63,7 +63,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       {user ? (
         <div className=" flex flex-row gap-4">
           <div>
-            <Avatar userId={user?.id} flag={true} />{" "}
+            <Avatar profileImage={user?.profileImage} userId={user?.id} flag={true} />{" "}
           </div>
           <div className=" w-full ">
             <textarea
