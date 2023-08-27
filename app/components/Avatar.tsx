@@ -26,12 +26,16 @@ const Avatar: React.FC<AvatarProps> = ({
   const [user, setUser] = useState<User | null>(null);
 
   const fetchUser = async () => {
-    if (userId) {
-      const { data } = await axios.get(
-        `https://backlitter.onrender.com/users/${userId}`
-      );
-      const user = data;
-      setUser(user);
+    try {
+      if (userId) {
+        const { data } = await axios.get(
+          `https://backlitter.onrender.com/users/${userId}`
+        );
+        const user = data;
+        setUser(user);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
