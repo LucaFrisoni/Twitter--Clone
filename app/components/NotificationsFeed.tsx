@@ -14,7 +14,7 @@ useEffect(() => {
   const fetchNotifications = async () => {
     if (user) {
       const { data } = await axios.get(
-        `http://localhost:3000/api/notifications/${user.id}`
+        `https://backlitter.onrender.com/notifications/${user._id}`
       );
       let notificationss = data;
       console.log(notificationss);
@@ -36,7 +36,7 @@ useEffect(() => {
     <div className=" max-h-[100vh] flex flex-col overflow-y-auto hideslidder">
       {notifications.map((noti: any) => (
         <div
-          key={noti.id}
+          key={noti._id}
           className="flex flex-row items-center p-6 gap-4 border-b-[1px] border-neutral-800"
         >
           <BsTwitter color="white" size={32} />

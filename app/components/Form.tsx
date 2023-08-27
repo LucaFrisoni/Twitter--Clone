@@ -35,10 +35,10 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       const email = user?.email;
 
       if (isComment) {
-        await axios.post("http://localhost:3000/api/comments", {
+        await axios.post("https://backlitter.onrender.com/comments", {
           body,
           postId,
-          currentUserId: user.id,
+          currentUserId: user._id,
         });
         toast.success("Comment Created");
         setBody("");
@@ -46,7 +46,10 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
         setIsLoading(false);
         return;
       }
-      await axios.post("http://localhost:3000/api/posts", { body, email });
+      await axios.post("https://backlitter.onrender.com/posts", {
+        body,
+        email,
+      });
 
       toast.success("Tweet Created");
       setBody("");
@@ -56,14 +59,14 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [body, router, isComment, postId, user?.email, user?.id]);
+  }, [body, router, isComment, postId, user?.email, user?._id]);
 
   return (
     <div className=" border-b-[1px] border-neutral-800 px-5 py-2">
       {user ? (
         <div className=" flex flex-row gap-4">
           <div>
-            <Avatar profileImage={user?.profileImage} userId={user?.id} flag={true} />{" "}
+            <Avatar profileImage={user?.profileImage} userId={user?._id} flag={true} />{" "}
           </div>
           <div className=" w-full ">
             <textarea

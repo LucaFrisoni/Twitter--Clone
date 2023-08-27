@@ -24,7 +24,7 @@ const Sidebar = () => {
     const fetchUser = useCallback(async () => {
       if (session) {
         const { data } = await axios.get(
-          `http://localhost:3000/api/users/email/${session?.user?.email}`
+          `https://backlitter.onrender.com/email/${session?.user?.email}`
         );
         const user = data;
         setUserr(user);
@@ -52,7 +52,7 @@ const Sidebar = () => {
     {
       icon: FaUser,
       label: "Profile",
-      href: `/users/${user?.id}`,
+      href: `/users/${user?._id}`,
       auth: true,
     },
   ];

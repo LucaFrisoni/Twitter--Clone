@@ -28,7 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const fetchUser = async () => {
     if (userId) {
       const { data } = await axios.get(
-        `http://localhost:3000/api/users/${userId}`
+        `https://backlitter.onrender.com/users/${userId}`
       );
       const user = data;
       setUser(user);
@@ -41,12 +41,11 @@ const Avatar: React.FC<AvatarProps> = ({
     }
   }, [flag]);
 
-
   const onClick = useCallback(
     (event: any) => {
       event.stopPropagation();
 
-      const url = `http://localhost:3000/users/${userId}`;
+      const url = `/users/${userId}`;
       router.push(url);
     },
     [router, userId]

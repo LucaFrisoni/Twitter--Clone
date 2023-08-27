@@ -3,7 +3,7 @@ import Avatar from "../Avatar";
 import axios from "axios";
 export const revalidate = 0;
 const FollowBar = async () => {
-  const { data } = await axios.get("http://localhost:3000/api/users");
+  const { data } = await axios.get("https://backlitter.onrender.com/users");
   const users = data;
   if (users.length === 0) {
     return null;
@@ -16,7 +16,7 @@ const FollowBar = async () => {
         <div className=" flex flex-col gap-6 mt-4">
           {users.map((user: any) => (
             <div key={user.id} className=" flex flex-row gap-4">
-              <Avatar userId={user.id} profileImage={user.profileImage} />
+              <Avatar userId={user._id} profileImage={user.profileImage} />
               <div className=" flex flex-col">
                 <p className=" text-white font-semibold text-sm">{user.name}</p>
                 <p className=" text-neutral-400 text-sm">@{user.username}</p>

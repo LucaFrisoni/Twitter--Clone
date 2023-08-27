@@ -14,7 +14,7 @@ const UserView = async ({
   params: { userId: string };
 }) => {
   const { data } = await axios.get(
-    `http://localhost:3000/api/users/${userId}`
+    `https://backlitter.onrender.com/users/${userId}`
   );
   const user = data;
 

@@ -33,7 +33,7 @@ const RegisterModal = () => {
 
       //TODO ADD LOGIN
 
-      await axios.post("http://localhost:3000/api/register", {
+      await axios.post("https://backlitter.onrender.com/register", {
         email,
         password,
         username,

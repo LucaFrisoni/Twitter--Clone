@@ -15,9 +15,9 @@ const CommentItem: React.FC<CommentItemProps> = ({ data }) => {
     (event: any) => {
       // detiene el onclick del padre
       event.stopPropagation();
-      router.push(`http://localhost:3000/users/${data.user?.id}`);
+      router.push(`/users/${data.userId?._id}`);
     },
-    [router, data.user?.id]
+    [router, data.userId?._id]
   );
 
   const createdAt = useMemo(() => {
@@ -30,17 +30,20 @@ const CommentItem: React.FC<CommentItemProps> = ({ data }) => {
   return (
     <div className=" bg-neutral-900 border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-800 transition">
       <div className=" flex flex-row items-start gap-3">
-        <Avatar profileImage={data.user.profileImage} userId={data.user.id}/>
+        <Avatar
+          profileImage={data.userId?.profileImage}
+          userId={data.userId?._id}
+        />
         <div>
           <div className=" flex flex-row items-center gap-2 ">
-            <p
-          
-              className=" text-white font-semibold cursor-pointer hover:underline"
-            >
-              {data.user.name}
+            <p className=" text-white font-semibold cursor-pointer hover:underline">
+              {data.userId?.name}
             </p>
-            <span onClick={goToUser} className="text-neutral-400  cursor-pointer hover:underline hidden md:block ">
-              @{data.user.username}
+            <span
+              onClick={goToUser}
+              className="text-neutral-400  cursor-pointer hover:underline hidden md:block "
+            >
+              @{data.userId?.username}
             </span>
             <span className=" text-neutral-500 text-sm ">{createdAt}</span>
           </div>

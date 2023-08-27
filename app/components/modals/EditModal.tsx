@@ -48,7 +48,7 @@ const EditModal = () => {
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await axios.patch("http://localhost:3000/api/edit", {
+      const result = await axios.patch("https://backlitter.onrender.com/edit", {
         email,
         name,
         profileImage,

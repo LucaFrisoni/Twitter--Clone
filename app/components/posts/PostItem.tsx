@@ -17,7 +17,7 @@ interface PostItemProps {
   data: Post;
   userId?: string;
 }
-
+export const revalidate = 0
 const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   const { data: session, status } = useSession();
 
@@ -32,10 +32,10 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
     (event: any) => {
       event.stopPropagation();
       router.push(
-        `/users/${data.user?.id}`
+        `/users/${data.user?._id}`
       );
     },
-    [router, data.user?.id]
+    [router, data.user?._id]
   );
 
 
@@ -45,6 +45,7 @@ useEffect(() => {
 
   if (data.likeIds) {
     setIsDataLoaded(true);
+ 
   }
 }, [data.likeIds]);
 
@@ -52,7 +53,7 @@ useEffect(() => {
     (event: any) => {
       event.stopPropagation();
       router.push(
-        `/posts/${data.id}`
+        `/posts/${data._id}`
       );
     },
     [router, data]
@@ -64,8 +65,8 @@ useEffect(() => {
     }
 
     const list = data.likeIds || [];
-    return list.includes(user?.id);
-  }, [isDataLoaded, user?.id, data.likeIds]);
+    return list.includes(user?._id);
+  }, [isDataLoaded, user?._id, data.likeIds]);
 
   const onLike = useCallback(
     async (event: any) => {
@@ -76,14 +77,14 @@ useEffect(() => {
       try {
         if (isLiked) {
           await axios.delete(
-            `http://localhost:3000/api/like?postId=${data.id}&currentUserId=${user?.id}`
+            `https://backlitter.onrender.com/like?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Post Unliked");
           router.refresh();
         } else {
-          await axios.post("http://localhost:3000/api/like", {
-            postId: data.id,
-            currentUserId: user.id,
+          await axios.post("https://backlitter.onrender.com/like", {
+            postId: data._id,
+            currentUserId: user._id,
           });
           toast.success("Post Liked");
           router.refresh();
@@ -92,7 +93,7 @@ useEffect(() => {
         toast.error("Something went wrong");
       }
     },
-    [loginModal, user, data.id, router, isLiked, session]
+    [loginModal, user, data._id, router, isLiked, session]
   );
 
   const createdAt = useMemo(() => {
@@ -109,7 +110,7 @@ useEffect(() => {
       onClick={goToPost}
     >
       <div className=" flex flex-row items-start gap-3">
-        <Avatar profileImage={data.user?.profileImage} userId={data.user?.id} />
+        <Avatar profileImage={data.user?.profileImage} userId={data.user?._id} />
 
         <div>
           <div className="flex flex-row items-center gap-2 ">

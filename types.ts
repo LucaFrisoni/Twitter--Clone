@@ -1,5 +1,5 @@
 export interface User {
-  id: string;
+  _id: string;
   name?: string 
   username?: string;
   bio?: string;
@@ -19,18 +19,18 @@ export interface User {
 }
 
 export interface Post {
-  id: string;
+  _id: string;
   body: string;
   userId?: string;
   likeIds?: string[];
   user?: User;
   comments?: Comment[];
-  createdAt: string; 
+  createdAt: string;
   updatedAt: string;
 }
 
 export interface Comment {
-  id: string;
+  _id: string;
   body: string;
   createdAt: Date;
   updatedAt: Date;
@@ -41,7 +41,7 @@ export interface Comment {
 }
 
 export interface Notification {
-  id: string;
+  _id: string;
   body: string;
   createdAt: Date;
   userId?: string;

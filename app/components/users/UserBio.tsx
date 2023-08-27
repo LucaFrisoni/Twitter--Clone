@@ -25,7 +25,7 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
 
   const isFollowing = useMemo(() => {
     const list = user?.user.followingIds || [];
-    return list.includes(userr?.id);
+    return list.includes(userr?._id);
   }, [user?.user.followingIds, userr]);
 
   const handleFollow = useCallback(async () => {
@@ -35,15 +35,15 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     try {
       if (isFollowing) {
         await axios.delete(
-          `http://localhost:3000/api/follow?userId=${user?.user.id}&currentUserId=${userr.id}`
+          `https://backlitter.onrender.com/follow?userId=${user?.user._id}&currentUserId=${userr._id}`
         );
 
         toast.success("User Unfollowed");
         router.refresh();
       } else {
-        await axios.post("http://localhost:3000/api/follow", {
-          userId: user?.user.id,
-          currentUserId: userr.id,
+        await axios.post("https://backlitter.onrender.com/follow", {
+          userId: user?.user._id,
+          currentUserId: userr._id,
         });
 
         toast.success("User Followed");

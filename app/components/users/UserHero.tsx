@@ -19,7 +19,13 @@ const UserHero: React.FC<UserHeroProps> = async ({ user }) => {
           />
         )}
         <div className=" absolute -bottom-16 left-4">
-          <Avatar profileImage={user?.user.profileImage} isLarge hasborder flag={true} />
+          <Avatar
+            profileImage={user?.user.profileImage}
+            userId={user?.user._id}
+            isLarge
+            hasborder
+            flag={true}
+          />
         </div>
       </div>
     </div>

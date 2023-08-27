@@ -9,22 +9,23 @@ interface PostFeedProps {
 
 const PostFeed: React.FC<PostFeedProps> = async ({ userId }) => {
   const { data: allPostsData } = await axios.get(
-    `http://localhost:3000/api/posts`
+    `https://backlitter.onrender.com/posts`
   );
 
   let usePostsTweet = allPostsData;
 
   if (userId) {
     const { data: userPostsData } = await axios.get(
-      `http://localhost:3000/api/posts?userId=${userId}`
+      `https://backlitter.onrender.com/posts?userId=${userId}`
     );
     usePostsTweet = userPostsData;
   }
+
   // console.log("Post", usePostsTweet);
   return (
     <>
       {usePostsTweet.map((tweet: Post) => {
-        return <PostItem userId={userId} key={tweet.id} data={tweet} />;
+        return <PostItem userId={userId} key={tweet._id} data={tweet} />;
       })}
     </>
   );
