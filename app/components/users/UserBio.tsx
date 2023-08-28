@@ -34,6 +34,7 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     }
     try {
       if (isFollowing) {
+     
         await axios.delete(
           `https://backlitter.onrender.com/follow?userId=${user?.user._id}&currentUserId=${userr._id}`
         );
@@ -50,6 +51,7 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
         router.refresh();
       }
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong");
     }
   }, [user, userr, isFollowing, loginModal, router, session]);
