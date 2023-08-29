@@ -31,9 +31,11 @@ const RegisterModal = () => {
     try {
       setIsLoading(true);
 
-      //TODO ADD LOGIN
-
-      await axios.post("https://backlitter.onrender.com/register", {
+      if (!email || !password || !name || !username) {
+        return toast.error("You should provide all the required fields");
+      }
+      // backlitter.onrender.com/register
+      https: await axios.post("https://backlitter.onrender.com/register", {
         email,
         password,
         username,
@@ -43,9 +45,21 @@ const RegisterModal = () => {
 
       registerModal.onClose();
       signIn("credentials", { email, password });
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+    } catch (error: any) {
+      console.log("Register error", error);
+      if (error?.response.data === "Invalid email format") {
+        return toast.error("Invalid email format");
+      }
+
+      if (error?.response.data === "User Already Exist") {
+        return toast.error("User Already Exist");
+      }
+
+      if (error?.response.data === "Username Already Exist") {
+        return toast.error("Username Already Exist");
+      } else {
+        toast.error("Something went wrong");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +74,7 @@ const RegisterModal = () => {
         }}
         value={email}
         disabled={isLoading}
+        type="email"
       />
       <Input
         placeholder="Name"
