@@ -1,39 +1,19 @@
-import React, { useEffect, useState } from "react";
-
-import { ClipLoader } from "react-spinners";
+import React from "react";
 import Header from "./Header";
 import PostItem from "./posts/PostItem";
 import Form from "./Form";
-import { Post } from "@/types";
+
 import CommentFeed from "./posts/CommentFeed";
 import axios from "axios";
 interface PostViewwProps {
   postId: string;
 }
 export const revalidate = 0;
-const PostVieww = ({ postId }: PostViewwProps) => {
-  const [post, setPost] = useState<Post>();
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchPost = async () => {
-    const { data } = await axios.get(
-      `https://backlitter.onrender.com/postss/${postId}`
-    );
-    const usePostt = data;
-    setPost(usePostt);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    fetchPost();
-  }, [postId]);
-
-  if (isLoading || !post) {
-    return (
-      <div className=" flex justify-center items-center h-full">
-        <ClipLoader color="lightblue" size={80} />
-      </div>
-    );
-  }
+const PostVieww = async ({ postId }: PostViewwProps) => {
+  const { data } = await axios.get(
+    `https://backlitter.onrender.com/postss/${postId}`
+  );
+  const post = data;
 
   return (
     <>
