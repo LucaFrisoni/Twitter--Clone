@@ -4,9 +4,19 @@ import { BiLogOut } from "react-icons/bi";
 import { BsHouseFill, BsBellFill } from "react-icons/bs";
 import { ImStatsBars } from "react-icons/im";
 import { FaUser } from "react-icons/fa";
-import Sidebarlogo from "./Sidebarlogo";
-import SidebarItem from "./SidebarItem";
-import SidebarTweetButton from "./SidebarTweetButton";
+
+import dynamic from "next/dynamic";
+
+const Sidebarlogo = dynamic(() => import("./Sidebarlogo"), {
+  loading: () => <p>Is loading</p>,
+});
+const SidebarItem = dynamic(() => import("./SidebarItem"), {
+  loading: () => <p>Is loading</p>,
+});
+const SidebarTweetButton = dynamic(() => import("./SidebarTweetButton"), {
+  loading: () => <p>Is loading</p>,
+});
+
 import { signOut, useSession } from "next-auth/react";
 
 import { User } from "@/types";

@@ -1,21 +1,23 @@
-
 import React from "react";
-import Avatar from "../Avatar";
+import dynamic from "next/dynamic";
+
+const Avatar = dynamic(() => import("../Avatar"), {
+  loading: () => (
+    <div className=" flex justify-center items-center h-full">
+      <ClipLoader color="lightblue" size={80} />
+    </div>
+  ),
+});
+
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
 export const revalidate = 0;
 const FollowBar = async () => {
+  // Error: Text content does not match server-rendered HTML.
 
+  // Warning: Text content did not match. Server: "19 seconds" Client: "20 seconds"
 
-
-
-
-// Error: Text content does not match server-rendered HTML.
-
-// Warning: Text content did not match. Server: "19 seconds" Client: "20 seconds"
-
-// See more info here: https://nextjs.org/docs/messages/react-hydration-error
-
-
+  // See more info here: https://nextjs.org/docs/messages/react-hydration-error
 
   const { data } = await axios.get("https://backlitter.onrender.com/users");
   const users = data;

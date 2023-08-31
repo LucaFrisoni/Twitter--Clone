@@ -1,20 +1,31 @@
 "use client";
 import React from "react";
 import Header from "../components/Header";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import NotificationsFeed from "../components/NotificationsFeed";
+
+
+import dynamic from "next/dynamic";
+import { ClipLoader } from "react-spinners";
+const NotificationsFeed = dynamic(
+  () => import("../components/NotificationsFeed"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className=" flex justify-center items-center h-full">
+        <ClipLoader color="lightblue" size={80} />
+      </div>
+    ),
+  }
+);
+
+
 
 const NotificationsView = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-
 
 
   return (
     <>
       <Header label="Notifications" showBackArrow />
-      <NotificationsFeed/>
+      <NotificationsFeed />
     </>
   );
 };
