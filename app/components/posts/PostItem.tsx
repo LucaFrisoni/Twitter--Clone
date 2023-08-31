@@ -1,10 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Post, User } from "@/types";
 import { useRouter } from "next/navigation";
 import useLoginModel from "@/hooks/zustandHooks/useLoginModel";
 import { useSession } from "next-auth/react";
-
 import { useSelector } from "react-redux";
 import Avatar from "../Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -12,12 +10,14 @@ import { AiOutlineHeart, AiFillHeart, AiOutlineMessage } from "react-icons/ai";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+import debounce from "lodash.debounce";
+
 
 interface PostItemProps {
-  data: Post;
+  data: any;
   userId?: string;
 }
-export const revalidate = 0
+// export const revalidate = 0;
 const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   const { data: session, status } = useSession();
 
@@ -31,30 +31,21 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   const goToUser = useCallback(
     (event: any) => {
       event.stopPropagation();
-      router.push(
-        `/users/${data.user?._id}`
-      );
+      router.push(`/users/${data.user?._id}`);
     },
     [router, data.user?._id]
   );
 
-
-  
-useEffect(() => {
-
-
-  if (data.likeIds) {
-    setIsDataLoaded(true);
- 
-  }
-}, [data.likeIds]);
+  useEffect(() => {
+    if (data.likeIds) {
+      setIsDataLoaded(true);
+    }
+  }, [data.likeIds]);
 
   const goToPost = useCallback(
     (event: any) => {
       event.stopPropagation();
-      router.push(
-        `/posts/${data._id}`
-      );
+      router.push(`/posts/${data._id}`);
     },
     [router, data]
   );
@@ -64,8 +55,9 @@ useEffect(() => {
       return false; // O cualquier valor predeterminado según tu lógica
     }
 
-    const list = data.likeIds || [];
-    return list.includes(user?._id);
+    return (
+      data.likeIds?.some((like: any) => like.userId === user?._id) || false
+    );
   }, [isDataLoaded, user?._id, data.likeIds]);
 
   const onLike = useCallback(
@@ -81,20 +73,27 @@ useEffect(() => {
           );
           toast.success("Post Unliked");
           router.refresh();
+ 
         } else {
+          //
           await axios.post("https://backlitter.onrender.com/like", {
             postId: data._id,
             currentUserId: user._id,
           });
           toast.success("Post Liked");
           router.refresh();
+   
+ 
         }
       } catch (error) {
+        console.log("el error", error);
         toast.error("Something went wrong");
       }
     },
     [loginModal, user, data._id, router, isLiked, session]
   );
+
+  const debouncedOnLike = debounce(onLike, 1000);
 
   const createdAt = useMemo(() => {
     if (!data?.createdAt) {
@@ -110,7 +109,10 @@ useEffect(() => {
       onClick={goToPost}
     >
       <div className=" flex flex-row items-start gap-3">
-        <Avatar profileImage={data.user?.profileImage} userId={data.user?._id} />
+        <Avatar
+          profileImage={data.user?.profileImage}
+          userId={data.user?._id}
+        />
 
         <div>
           <div className="flex flex-row items-center gap-2 ">
@@ -134,7 +136,10 @@ useEffect(() => {
               <p>{data.comments?.length || 0}</p>
             </div>
             <div
-              onClick={onLike}
+              onClick={(event) => {
+                event.stopPropagation();
+                debouncedOnLike(event);
+              }}
               className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500"
             >
               {isLiked ? (

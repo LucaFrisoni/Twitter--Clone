@@ -46,7 +46,7 @@ const RegisterModal = () => {
       registerModal.onClose();
       signIn("credentials", { email, password });
     } catch (error: any) {
-      console.log("Register error", error);
+    
       if (error?.response.data === "Invalid email format") {
         return toast.error("Invalid email format");
       }

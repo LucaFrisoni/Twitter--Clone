@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { BsHouseFill, BsBellFill } from "react-icons/bs";
+import { ImStatsBars } from "react-icons/im";
 import { FaUser } from "react-icons/fa";
 import Sidebarlogo from "./Sidebarlogo";
 import SidebarItem from "./SidebarItem";
@@ -10,8 +11,7 @@ import { signOut, useSession } from "next-auth/react";
 
 import { User } from "@/types";
 
-
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout, setUser } from "@/redux/actions";
 import axios from "axios";
 
@@ -21,20 +21,20 @@ const Sidebar = () => {
   const dispatch = useDispatch();
 
   const [user, setUserr] = useState<User | null>(null);
-    const fetchUser = useCallback(async () => {
-      if (session) {
-        const { data } = await axios.get(
-          `https://backlitter.onrender.com/email/${session?.user?.email}`
-        );
-        const user = data;
-        setUserr(user);
-        dispatch(setUser(user));
-      }
-    }, [session, dispatch]);
+  const fetchUser = useCallback(async () => {
+    if (session) {
+      const { data } = await axios.get(
+        `https://backlitter.onrender.com/email/${session?.user?.email}`
+      );
+      const user = data;
+      setUserr(user);
+      dispatch(setUser(user));
+    }
+  }, [session, dispatch]);
 
-    useEffect(() => {
-      fetchUser(); // Llamamos a la función aquí dentro del useEffect
-    }, [fetchUser]);
+  useEffect(() => {
+    fetchUser(); // Llamamos a la función aquí dentro del useEffect
+  }, [fetchUser]);
 
   const items = [
     {
@@ -53,6 +53,12 @@ const Sidebar = () => {
       icon: FaUser,
       label: "Profile",
       href: `/users/${user?._id}`,
+      auth: true,
+    },
+    {
+      icon: ImStatsBars,
+      label: "Stadistics",
+      href: `/stadistics`,
       auth: true,
     },
   ];

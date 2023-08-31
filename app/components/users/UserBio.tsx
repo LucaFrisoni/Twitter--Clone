@@ -1,6 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { format } from "date-fns";
 import Button from "../Button";
 import { BiCalendar } from "react-icons/bi";
@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+
+import debounce from "lodash.debounce";
 
 interface UserBioProps {
   user: any;
@@ -34,7 +36,6 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     }
     try {
       if (isFollowing) {
-     
         await axios.delete(
           `https://backlitter.onrender.com/follow?userId=${user?.user._id}&currentUserId=${userr._id}`
         );
@@ -56,9 +57,20 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
     }
   }, [user, userr, isFollowing, loginModal, router, session]);
 
+  const debouncedOnFollow = debounce(handleFollow, 1000);
+
   const createdAt = useMemo(() => {
     return format(new Date(user?.user.createdAt), "MMMM yyyy");
   }, [user?.user.createdAt]);
+
+
+
+  const totalLikes = useMemo(() => {
+    return user?.user.posts.reduce(
+      (sum: any, post: any) => sum + post.likeIds.length,
+      0
+    );
+  }, [user]);
 
   return (
     <div className=" border-b-[1px] border-neutral-800 pb-4">
@@ -67,7 +79,7 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
           <Button secondary label="Edit" onClick={editModal.onOpen} />
         ) : (
           <Button
-            onClick={handleFollow}
+            onClick={debouncedOnFollow}
             label={isFollowing ? "Unfollow" : "Follow"}
             secondary={!isFollowing}
             outline={isFollowing}
@@ -99,6 +111,10 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
           <div className=" flex flex-row items-center gap-1">
             <p className=" text-white">{user?.user.followingIds.length}</p>
             <p className=" text-neutral-500">Followers</p>
+          </div>
+          <div className=" flex flex-row items-center gap-1">
+            <p className=" text-white">{totalLikes}</p>
+            <p className=" text-neutral-500">Total Likes</p>
           </div>
         </div>
       </div>

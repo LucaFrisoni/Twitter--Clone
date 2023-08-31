@@ -6,7 +6,7 @@ import useRegisterModal from "@/hooks/zustandHooks/useRegisterModal";
 import axios from "axios";
 
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "./Button";
 import Avatar from "./Avatar";
@@ -27,11 +27,20 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
   const user = useSelector((state: any) => state.user);
 
   const [body, setBody] = useState("");
+  const [limit, setLimit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = useCallback(async () => {
     try {
+      setLimit(false);
+
+      if (body.length > 400) {
+        setLimit(true);
+        return;
+        // router.refresh()
+      }
       setIsLoading(true);
+
       const email = user?.email;
 
       if (isComment) {
@@ -66,7 +75,11 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       {user ? (
         <div className=" flex flex-row gap-4">
           <div>
-            <Avatar profileImage={user?.profileImage} userId={user?._id} flag={true} />{" "}
+            <Avatar
+              profileImage={user?.profileImage}
+              userId={user?._id}
+              flag={true}
+            />{" "}
           </div>
           <div className=" w-full ">
             <textarea
@@ -89,6 +102,9 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
             ></textarea>
             <hr className="opacity-0 peer-focus:opacity-100 h-1[px] border-neutral-800 transition" />
             <div className=" mt-4 flex flex-row justify-end">
+              {limit && (
+                <p className=" text-red-800 p-3">Maximum 400 characters</p>
+              )}
               <Button
                 disabled={isLoading || !body}
                 label="Tweet"

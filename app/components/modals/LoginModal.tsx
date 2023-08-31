@@ -6,10 +6,15 @@ import Modal from "../Modal";
 import useRegisterModel from "@/hooks/zustandHooks/useRegisterModal";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import usePasswordModal from "@/hooks/zustandHooks/useChangePasswordModel";
 
 const LoginModal = () => {
+
+  
   const loginModal = useLoginModel();
   const registerModal = useRegisterModel();
+  const passwordModal = usePasswordModal();
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +27,13 @@ const LoginModal = () => {
     loginModal.onClose();
     registerModal.onOpen();
   }, [registerModal, loginModal, isLoading]);
+  const onToggle2 = useCallback(() => {
+    if (isLoading) {
+      return;
+    }
+    loginModal.onClose();
+    passwordModal.onOpen();
+  }, [passwordModal, loginModal, isLoading]);
 
   const onSubmit = useCallback(async () => {
     try {
@@ -88,6 +100,16 @@ const LoginModal = () => {
         >
           {" "}
           Create Account
+        </span>
+      </p>
+      <p>
+        Forgot Password?
+        <span
+          onClick={onToggle2}
+          className=" text-white cursor-pointer hover:underline"
+        >
+          {" "}
+          Change Passwrod
         </span>
       </p>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 
+import ChangePasswordModal from "@/app/components/modals/ChangePasswordModal";
 import EditModal from "@/app/components/modals/EditModal";
 import LoginModal from "@/app/components/modals/LoginModal";
 import RegisterModal from "@/app/components/modals/RegisterModal";
@@ -22,6 +23,7 @@ const ModalProvider = () => {
     <LoginModal />
     <RegisterModal />
     <EditModal />
+    <ChangePasswordModal />
     </div>
   );
 };

@@ -60,7 +60,6 @@ const EditModal = () => {
       router.refresh();
       toast.success("Update");
     } catch (error: any) {
-      console.log("el errorrr", error);
       if (error.response.data == "Username Already Exist") {
         return toast.error("Username Already Exist");
       }

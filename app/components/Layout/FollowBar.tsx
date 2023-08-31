@@ -5,6 +5,18 @@ import axios from "axios";
 export const revalidate = 0;
 const FollowBar = async () => {
 
+
+
+
+
+// Error: Text content does not match server-rendered HTML.
+
+// Warning: Text content did not match. Server: "19 seconds" Client: "20 seconds"
+
+// See more info here: https://nextjs.org/docs/messages/react-hydration-error
+
+
+
   const { data } = await axios.get("https://backlitter.onrender.com/users");
   const users = data;
   if (users.length === 0) {
