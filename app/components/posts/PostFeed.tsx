@@ -31,7 +31,7 @@ const PostFeed: React.FC<PostFeedProps> = async ({ userId }) => {
     console.log(error);
   }
 
-  // .log("Post", usePostsTweet);
+
 };
 
 export default PostFeed;

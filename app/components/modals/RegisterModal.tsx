@@ -35,7 +35,8 @@ const RegisterModal = () => {
         return toast.error("You should provide all the required fields");
       }
       // backlitter.onrender.com/register
-      https: await axios.post("https://backlitter.onrender.com/register", {
+
+      await axios.post("https://backlitter.onrender.com/register", {
         email,
         password,
         username,
@@ -46,7 +47,6 @@ const RegisterModal = () => {
       registerModal.onClose();
       signIn("credentials", { email, password });
     } catch (error: any) {
-    
       if (error?.response.data === "Invalid email format") {
         return toast.error("Invalid email format");
       }
@@ -70,7 +70,7 @@ const RegisterModal = () => {
       <Input
         placeholder="Email"
         onChange={(e) => {
-          setEmail(e.target.value);
+          setEmail(e.target.value.trim());
         }}
         value={email}
         disabled={isLoading}

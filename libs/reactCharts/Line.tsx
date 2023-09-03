@@ -23,17 +23,18 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  data: any;
+  label: string[];
   xTitle: string;
+  values: number[];
 }
 
-const LineChart = ({ data, xTitle }: LineChartProps) => {
+const LineChart = ({ label, xTitle, values }: LineChartProps) => {
   const chartData = {
-    labels: data.labels,
+    labels: label,
     datasets: [
       {
         label: "Likes",
-        data: data.values,
+        data: values,
         fill: true,
         borderColor: "rgb(75, 192, 192)",
         backgroundColor: "rgb(75, 192, 192,0.5)",
@@ -42,9 +43,7 @@ const LineChart = ({ data, xTitle }: LineChartProps) => {
       },
     ],
   };
-  if (xTitle == "Weeks") {
-    chartData.labels = [1, 2, 3, 4, 5];
-  }
+
   const options = {
     scales: {
       y: {

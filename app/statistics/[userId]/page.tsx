@@ -1,12 +1,12 @@
 "use client";
 import React, { useMemo } from "react";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 
 import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
 
 
-const StaticksView = dynamic(() => import("../components/StaticksView"), {
+const StaticksView = dynamic(() => import("../../components/StaticksView"), {
   ssr: false,
   loading: () => (
     <div className=" flex justify-center items-center h-full">
@@ -17,11 +17,15 @@ const StaticksView = dynamic(() => import("../components/StaticksView"), {
 
 
 export const revalidate = 1
-const StadisticsVieww = () => {
+const StadisticsVieww = ({
+  params: { userId },
+}: {
+  params: { userId: string };
+}) => {
   return (
     <>
       <Header label="Stadistics" showBackArrow />
-      <StaticksView />
+      <StaticksView userId={userId}/>
     </>
   );
 };

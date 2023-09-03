@@ -1,28 +1,50 @@
 "use client";
-import React, { useMemo } from "react";
-import { AiFillHeart } from "react-icons/ai";
+import React, { useMemo, useState, useEffect } from "react";
+import { AiFillHeart, AiOutlineSearch } from "react-icons/ai";
 import { RiUserFollowFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
-
-import {
-  startOfDay,
-  startOfWeek,
-  eachWeekOfInterval,
-  eachDayOfInterval,
-  getISOWeek,
-} from "date-fns";
+import axios from "axios";
 import { ClipLoader } from "react-spinners";
-import LineChart from "./reactCharts/Line";
+import { toast } from "react-hot-toast";
+import ReactChart from "./Statistics/ReactChart";
+import debounce from "lodash.debounce";
+interface ChartInfo {
+  labels: string[];
+  values: number[];
+}
 
-type LikesByDay = {
-  [date: string]: number;
-};
-type LikesByWeek = {
-  [date: string]: number;
-};
+interface StadisticsViewProps {
+  userId: string;
+  refreshInterval?: number;
+}
 
-const StaticksView = () => {
+const StaticksView = ({
+  userId,
+  refreshInterval = 10000,
+}: StadisticsViewProps) => {
   const user = useSelector((state: any) => state.user);
+
+  const [selectedMonth1, setSelectedMonth1] = useState(""); // Estado para el mes seleccionado
+  const [selectedYear1, setSelectedYear1] = useState(""); // Estado para el año seleccionado
+  const [selectedMonth2, setSelectedMonth2] = useState(""); // Estado para el mes seleccionado
+  const [selectedYear2, setSelectedYear2] = useState(""); // Estado para el año seleccionado
+
+  const [chartInfo, setChartInfo] = useState<ChartInfo>({
+    labels: [],
+    values: [],
+  });
+  const [chartInfo2, setChartInfo2] = useState<ChartInfo>({
+    labels: [],
+    values: [],
+  });
+
+  const [disabled1, setDisabled1] = useState(true);
+  const [disabled2, setDisabled2] = useState(true);
+
+  const [loading, isLoading] = useState(false);
+  const [loading2, isLoading2] = useState(false);
+  const [flag, setFlag] = useState(false);
+  const [flag2, setFlag2] = useState(false);
 
   const totalLikes = useMemo(() => {
     return user?.posts.reduce(
@@ -58,17 +80,17 @@ const StaticksView = () => {
 
   let changeMessage = "";
   let messageColor = "";
+  let sum = likesToday - likesYesterday;
   if (percentageChange > 0) {
     messageColor = "green";
     changeMessage = `Likes increase a ${percentageChange.toFixed(
       2
-    )}% compared to the day before`;
-  }
-  if (percentageChange < 0) {
+    )}% compared to the day before with ${sum} more likes!`;
+  } else if (percentageChange < 0) {
     messageColor = "red";
     changeMessage = ` Likes decrease a ${Math.abs(percentageChange).toFixed(
       2
-    )}% compared to the day before`;
+    )}% compared to the day before with ${-sum} less likes`;
   } else {
     changeMessage = "The number of likes is the same as the day before.";
     messageColor = "";
@@ -78,87 +100,10 @@ const StaticksView = () => {
     changeMessage = "No likes from yesterday yet";
     messageColor = "";
   }
-
-  const likesPerDay = (user: any) => {
-    const currentDate = new Date();
-    const firstDayOfMonth = startOfDay(
-      new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-    );
-    const lastDayOfMonth = startOfDay(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
-    );
-
-    const daysOfMonth = eachDayOfInterval({
-      start: firstDayOfMonth,
-      end: lastDayOfMonth,
-    });
-
-    // Creamos un objeto para almacenar los likes por fecha
-    const likesByDay: LikesByDay = {};
-
-    // Inicializamos el objeto con cero likes para cada día del mes
-    daysOfMonth.forEach((day) => {
-      likesByDay[day.toDateString()] = 0;
-    });
-
-    // Recorremos los posts para contar los likes por día
-    user?.posts.forEach((post: any) => {
-      post.likeIds.forEach((like: any) => {
-        const likeDate = new Date(like.timestamp);
-        const dayDateString = likeDate.toDateString();
-        if (dayDateString in likesByDay) {
-          likesByDay[dayDateString] += 1; // Incrementamos los likes por día
-        }
-      });
-    });
-
-    return {
-      labels: daysOfMonth.map((day) => day.getDate()),
-      values: Object.values(likesByDay), // Array con la cantidad de likes por día
-    };
-  };
-
-  // Procesamiento de likes por semana
-  const likesPerWeek = (user: any) => {
-    const currentDate = new Date();
-    const firstDayOfMonth = startOfDay(
-      new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-    );
-    const lastDayOfMonth = startOfDay(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
-    );
-
-    const weeksOfMonth = eachWeekOfInterval({
-      start: firstDayOfMonth,
-      end: lastDayOfMonth,
-    });
-
-    // Creamos un objeto para almacenar los likes por semana
-    const likesByWeek: LikesByWeek = {};
-
-    // Inicializamos el objeto con cero likes para cada semana del mes
-    weeksOfMonth.forEach((weekStart) => {
-      likesByWeek[getISOWeek(weekStart)] = 0;
-    });
-
-    // Recorremos los posts para contar los likes por semana
-    user?.posts.forEach((post: any) => {
-      post.likeIds.forEach((like: any) => {
-        const likeDate = new Date(like.timestamp);
-        const weekStart = startOfWeek(likeDate);
-        const isoWeek = getISOWeek(weekStart);
-
-        if (isoWeek in likesByWeek) {
-          likesByWeek[isoWeek] += 1; // Incrementamos los likes por semana
-        }
-      });
-    });
-
-    return {
-      labels: Object.keys(likesByWeek).map(Number),
-      values: Object.values(likesByWeek), // Array con la cantidad de likes por semana
-    };
-  };
+  if (totalLikes === 0) {
+    changeMessage = "This account does not have likes yet";
+    messageColor = "";
+  }
 
   if (!user) {
     return (
@@ -168,6 +113,105 @@ const StaticksView = () => {
     );
   }
 
+  const handleMonthChange = (month: string) => {
+    // Actualiza el estado con el año seleccionado
+    setSelectedMonth1(month);
+    if (selectedYear1) {
+      setDisabled1(false);
+    }
+    // Realiza cualquier otra acción necesaria con el año seleccionado
+  };
+  const handleYearChange = (year: string) => {
+    // Actualiza el estado con el año seleccionado
+    setSelectedYear1(year);
+    if (selectedMonth1) {
+      setDisabled1(false);
+    }
+    // Realiza cualquier otra acción necesaria con el año seleccionado
+  };
+  const handleMonthChange2 = (month: string) => {
+    // Actualiza el estado con el año seleccionado
+    setSelectedMonth2(month);
+    if (selectedYear1) {
+      setDisabled2(false);
+    }
+    // Realiza cualquier otra acción necesaria con el año seleccionado
+  };
+  const handleYearChange2 = (year: string) => {
+    // Actualiza el estado con el año seleccionado
+    setSelectedYear2(year);
+    if (selectedMonth2) {
+      setDisabled2(false);
+    }
+    // Realiza cualquier otra acción necesaria con el año seleccionado
+  };
+
+  const handleCharts1 = async () => {
+    try {
+      isLoading(true);
+      setFlag(true);
+      const { data } = await axios.get(
+        "https://backlitter.onrender.com/charts",
+        {
+          params: {
+            userId: userId,
+            month: selectedMonth1,
+            year: selectedYear1,
+            mode: "day",
+          },
+        }
+      );
+
+      setChartInfo(data);
+    } catch (error: any) {
+      if (
+        error?.response.data ==
+        "You cannot select a month that has not happened yet"
+      ) {
+        return toast.error(
+          "You cannot select a month that has not happened yet"
+        );
+      }
+      return toast.error("Something went wrong with charts information");
+    } finally {
+      isLoading(false);
+    }
+  };
+  const handleCharts2 = async () => {
+    try {
+      isLoading2(true);
+      setFlag2(true);
+      const { data } = await axios.get(
+        "https://backlitter.onrender.com/charts",
+        {
+          params: {
+            userId: userId,
+            month: selectedMonth2,
+            year: selectedYear2,
+            mode: "week",
+          },
+        }
+      );
+      setChartInfo2(data);
+    } catch (error: any) {
+      console.log(error);
+      if (
+        error?.response.data ==
+        "You cannot select a month that has not happened yet"
+      ) {
+        return toast.error(
+          "You cannot select a month that has not happened yet"
+        );
+      }
+      return toast.error("Something went wrong with charts information");
+    } finally {
+      isLoading2(false);
+    }
+  };
+
+  const DebouncehandleCharts1 = debounce(handleCharts1, 1000);
+  const DebouncehandleCharts2 = debounce(handleCharts2, 1000);
+  //
   return (
     <div className="p-3 overflow-y-auto">
       <div className="flex flex-row gap-3 justify-center p-8">
@@ -191,7 +235,7 @@ const StaticksView = () => {
       </div>
 
       <div className=" w-full text-white">
-        <p className=" p-2 font-bold text-3xl">Porcentual Stadistics</p>
+        <p className=" p-2 font-bold text-3xl">Porcentual Statistics</p>
         <hr className="border-gray-500" />
         <p
           className={` p-2 font-semibold text-gray-500 
@@ -203,14 +247,26 @@ const StaticksView = () => {
         </p>
       </div>
       <div>
-        <h3 className=" text-white">Daily likes of the Month</h3>
-        <div className="w-[240px] bg-light mx-auto px-2 border-2 border-sky-500 sm:w-[450px] sm:h-[225px] mt-3 mb-6">
-          <LineChart xTitle="Days" data={likesPerDay(user)} />
-        </div>
-        <h3 className=" text-white">Weakly likes of the Month</h3>
-        <div className=" w-[240px] bg-light mx-auto px-2 border-2 border-sky-500 sm:w-[450px] sm:h-[225px] mt-3">
-          <LineChart xTitle="Weeks" data={likesPerWeek(user)} />
-        </div>
+        <ReactChart
+          title="Daily likes"
+          handleMonthChange={handleMonthChange}
+          handleYearChange={handleYearChange}
+          disabled={disabled1}
+          handleCharts={DebouncehandleCharts1}
+          flag={flag}
+          loading={loading}
+          chartInfo={chartInfo}
+        />
+        <ReactChart
+          title="Weakly likes"
+          handleMonthChange={handleMonthChange2}
+          handleYearChange={handleYearChange2}
+          disabled={disabled2}
+          handleCharts={DebouncehandleCharts2}
+          flag={flag2}
+          loading={loading2}
+          chartInfo={chartInfo2}
+        />
       </div>
     </div>
   );

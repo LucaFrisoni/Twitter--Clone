@@ -47,6 +47,9 @@ const EditModal = () => {
 
   const onSubmit = useCallback(async () => {
     try {
+      if (!name || ! username){
+        return toast.error("You cannot leave username or name blank");
+      }
       setIsLoading(true);
       const result = await axios.patch("https://backlitter.onrender.com/edit", {
         email,

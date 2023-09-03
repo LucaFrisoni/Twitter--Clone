@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Button from "./Button";
 import Avatar from "./Avatar";
 import { useSelector } from "react-redux";
+import debounce from "lodash.debounce";
 
 interface FormProps {
   placeholder: string;
@@ -33,6 +34,11 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
   const onSubmit = useCallback(async () => {
     try {
       setLimit(false);
+      // aca crea una funcion que se fije si body no tiene ningun caracter y son solo espacios de retornar un toast.error que dija debes you must write a tweet
+
+      if (body.trim().length === 0) {
+        return toast.error("Tweets cannot have empty spaces");
+      }
 
       if (body.length > 400) {
         setLimit(true);
@@ -69,6 +75,8 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       setIsLoading(false);
     }
   }, [body, router, isComment, postId, user?.email, user?._id]);
+
+  const debounceTweet = debounce(onSubmit, 1000);
 
   return (
     <div className=" border-b-[1px] border-neutral-800 px-5 py-2">
@@ -108,7 +116,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
               <Button
                 disabled={isLoading || !body}
                 label="Tweet"
-                onClick={onSubmit}
+                onClick={debounceTweet}
               />
             </div>
           </div>

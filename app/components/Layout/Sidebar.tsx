@@ -67,8 +67,8 @@ const Sidebar = () => {
     },
     {
       icon: ImStatsBars,
-      label: "Stadistics",
-      href: `/stadistics`,
+      label: "Statistics",
+      href: `/statistics/${user?._id}`,
       auth: true,
     },
   ];

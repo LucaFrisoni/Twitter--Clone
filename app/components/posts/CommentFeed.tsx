@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import CommentItem from "./CommentItem";
 
@@ -6,7 +7,7 @@ interface CommentFeedProps {
 }
 
 const CommentFeed: React.FC<CommentFeedProps> = ({ comments = [] }) => {
-  console.log("Coments", comments);
+
   return (
     <>
       {comments?.map((comment: any) => (
