@@ -1,7 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 
-
 import useEditModel from "@/hooks/zustandHooks/useEditModel";
 
 import { toast } from "react-hot-toast";
@@ -26,7 +25,7 @@ const EditModal = () => {
   const [email, setEmail] = useState<string | undefined>("");
 
   const user = useSelector((state: any) => state.user);
-
+  console.log("Edit user =>", user);
   useEffect(() => {
     setEmail(user?.email);
     setProfileImage(user?.profileImage);
@@ -47,7 +46,7 @@ const EditModal = () => {
 
   const onSubmit = useCallback(async () => {
     try {
-      if (!name || ! username){
+      if (!name || !username) {
         return toast.error("You cannot leave username or name blank");
       }
       setIsLoading(true);
