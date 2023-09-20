@@ -81,7 +81,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           );
           toast.success("Post Unliked");
           router.refresh();
- 
+//  window.location.reload();
+
         } else {
           //
           await axios.post("https://backlitter.onrender.com/like", {
@@ -90,7 +91,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           });
           toast.success("Post Liked");
           router.refresh();
-   
+  //  window.location.reload();
  
         }
       } catch (error) {

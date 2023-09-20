@@ -69,6 +69,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       toast.success("Tweet Created");
       setBody("");
       router.refresh();
+      
     } catch (error) {
       toast.error("Something went wrong");
     } finally {

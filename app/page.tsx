@@ -1,3 +1,4 @@
+import axios from "axios";
 import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
 
@@ -25,12 +26,16 @@ const PostFeed = dynamic(() => import("./components/posts/PostFeed"), {
   ),
 });
 
-export default function Home() {
+export default async function Home() {
+  const { data: allPostsData } = await axios.get(
+    `https://backlitter.onrender.com/posts`
+  );
+
   return (
     <>
       <Header label="Home" />
       <Form placeholder="What`s happening?" />
-      <PostFeed />
+      <PostFeed allTweets={allPostsData} />
     </>
   );
 }
