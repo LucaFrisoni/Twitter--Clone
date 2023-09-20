@@ -26,7 +26,7 @@ const PostFeed = dynamic(() => import("./components/posts/PostFeed"), {
   ),
 });
 
-export default async function Home() {
+const Home = async () => {
   const { data: allPostsData } = await axios.get(
     `https://backlitter.onrender.com/posts`
   );
@@ -38,4 +38,5 @@ export default async function Home() {
       <PostFeed allTweets={allPostsData} />
     </>
   );
-}
+};
+export default Home;
