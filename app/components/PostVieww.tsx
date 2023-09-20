@@ -49,6 +49,11 @@ const PostView: React.FC<PostViewProps> = ({
   postId,
   refreshInterval = 10000,
 }) => {
+
+
+
+
+  
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

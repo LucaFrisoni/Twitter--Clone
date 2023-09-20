@@ -19,10 +19,18 @@ interface PostItemProps {
 }
 // export const revalidate = 0;
 const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
+
+  
   const { data: session, status } = useSession();
+
+ 
 
   const router = useRouter();
   const loginModal = useLoginModel();
+
+
+
+
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // New state
 
@@ -101,6 +109,18 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
     }
     return formatDistanceToNowStrict(new Date(data.createdAt));
   }, [data.createdAt]);
+
+
+ const [isMounted, setIsMounted] = useState(false);
+
+ useEffect(() => {
+   setIsMounted(true);
+ }, []);
+ if (!isMounted) {
+   return null;
+ }
+
+
 
   return (
     <div
