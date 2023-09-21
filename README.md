@@ -33,3 +33,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## About this apliccation
+
+In this application, you will find an interface that closely resembles what Twitter looked like in the past. Here, you can create tweets, like them, and even leave comments on them.
+
+We have a section dedicated to editing your profile, where you can adjust your name and choose a profile picture and banner that best suit your preferences. You can also follow your contacts and see how many followers and likes you have. Finally, we offer a small statistical module that allows you to view your likes and analyze their daily and weekly trends.
