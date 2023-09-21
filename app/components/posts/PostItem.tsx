@@ -81,7 +81,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           );
           toast.success("Post Unliked");
           router.refresh();
- window.location.reload();
+
 
         } else {
           //
@@ -91,7 +91,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           });
           toast.success("Post Liked");
           router.refresh();
-   window.location.reload();
+  
  
         }
       } catch (error) {
