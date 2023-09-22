@@ -1,5 +1,7 @@
+
 import axios from "axios";
 import dynamic from "next/dynamic";
+// import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 const Header = dynamic(() => import("./components/Header"), {
@@ -27,16 +29,19 @@ const PostFeed = dynamic(() => import("./components/posts/PostFeed"), {
 });
 
 const Home = async () => {
+
+// const [isLoading, setIsLoading] = useState(true);
+
   const { data: allPostsData } = await axios.get(
     `https://backlitter.onrender.com/posts`
   );
 
   return (
-    <>
+    <div>
       <Header label="Home" />
       <Form placeholder="What`s happening?" />
       <PostFeed allTweets={allPostsData} />
-    </>
+    </div>
   );
 };
 export default Home;
