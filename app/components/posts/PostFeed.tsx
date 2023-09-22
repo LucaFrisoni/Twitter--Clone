@@ -3,15 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Post } from "@/types";
 import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
+import PostItem from "./PostItem";
 
-const PostItem = dynamic(() => import("@/app/components/posts/PostItem"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex justify-center items-center">
-      <ClipLoader color="lightblue" size={80} />
-    </div>
-  ),
-});
+
 
 interface PostFeedProps {
   userId?: string;
