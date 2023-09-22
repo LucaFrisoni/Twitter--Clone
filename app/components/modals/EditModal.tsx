@@ -25,7 +25,7 @@ const EditModal = () => {
   const [email, setEmail] = useState<string | undefined>("");
 
   const user = useSelector((state: any) => state.user);
-  console.log("Edit user =>", user);
+ 
   useEffect(() => {
     setEmail(user?.email);
     setProfileImage(user?.profileImage);

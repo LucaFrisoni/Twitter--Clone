@@ -40,7 +40,9 @@ const UserView = async ({
     `https://backlitter.onrender.com/users/${userId}`
   );
   const user = data;
-
+  const { data: userPostsData } = await axios.get(
+          `https://backlitter.onrender.com/posts?userId=${userId}`
+        );
   if (!user) {
     return (
       <div className=" flex justify-center items-center h-full">
@@ -54,7 +56,7 @@ const UserView = async ({
       <Header showBackArrow label={user?.user.name} />
       <UserHero user={user} />
       <UserBio user={user} />
-      <PostFeed userId={userId} />
+      <PostFeed dataUserId={userPostsData} />
     </>
   );
 };
