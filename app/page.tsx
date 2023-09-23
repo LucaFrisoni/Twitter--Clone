@@ -1,4 +1,4 @@
-"use client"
+
 import axios from "axios";
 import HomeView from "./components/Views/HomeView";
 
