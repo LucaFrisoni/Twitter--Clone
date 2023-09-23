@@ -13,9 +13,8 @@ const Header: React.FC<HeaderProps> = ({ label, showBackArrow }) => {
   const router = useRouter();
 
 
-  const handleBack = useCallback(() => {
-    router.back();
-  }, [router]);
+  const handleBack =  router.back();
+
 
   return (
     <div className=" border-b-[1px] border-neutral-800 p-5">
