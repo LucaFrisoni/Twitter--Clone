@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
 
 
-const StaticksView = dynamic(() => import("../../components/StaticksView"), {
+const StaticksView = dynamic(() => import("../../components/Views/StaticksView"), {
   ssr: false,
   loading: () => (
     <div className=" flex justify-center items-center h-full">

@@ -1,9 +1,9 @@
-"use client";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import PostFeed from "./components/posts/PostFeed";
+import HomeView from "./components/Views/HomeView";
 
 const Header = dynamic(() => import("./components/Header"), {
   loading: () => (
@@ -21,37 +21,38 @@ const Form = dynamic(() => import("./components/Form"), {
   ),
 });
 
+const Home = async () => {
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [allPostsData, setPost] = useState([]);
+  // const fetch = async () => {
+  const { data: allPostsDataa } = await axios.get(
+    `https://backlitter.onrender.com/posts`
+  );
+  //   setPost(allPostsDataa);
+  // };
 
+  // useEffect(() => {
+  //   setIsLoading(false);
+  //   fetch();
 
-const Home = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [allPostsData, setPost] = useState([]);
-  const fetch = async () => {
-    const { data: allPostsDataa } = await axios.get(
-      `https://backlitter.onrender.com/posts`
-    );
-    setPost(allPostsDataa);
-    console.log("refresh")
-  };
+  //   // Establece un intervalo para llamar a fetchData cada 2 segundos.
+  //   const intervalId = setInterval(fetch, 10000);
 
-  useEffect(() => {
-    setIsLoading(false);
-   
-  }, []);
-  fetch();
+  //   // Limpia el intervalo cuando el componente se desmonta para evitar fugas de memoria.
+  //   return () => clearInterval(intervalId);
+  // }, [fetch]);
+
   return (
     <>
-      {isLoading ? ( // Renderiza el loader si isLoading es true
+      {/* {isLoading ? ( // Renderiza el loader si isLoading es true
         <div className="flex justify-center items-center">
           <ClipLoader color="lightblue" size={80} />
         </div>
-      ) : (
-        <div>
-          <Header label="Home" />
-          <Form placeholder="What`s happening?" />
-          <PostFeed allTweets={allPostsData} />
-        </div>
-      )}
+      ) : ( */}
+      <div>
+        <HomeView allPostsData={allPostsDataa} />
+      </div>
+      {/* )} */}
     </>
   );
 };

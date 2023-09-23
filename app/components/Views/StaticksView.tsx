@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-import ReactChart from "./Statistics/ReactChart";
+import ReactChart from "../Statistics/ReactChart";
 import debounce from "lodash.debounce";
 interface ChartInfo {
   labels: string[];

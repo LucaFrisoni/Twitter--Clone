@@ -12,25 +12,16 @@ import axios from "axios";
 
 import debounce from "lodash.debounce";
 
-
 interface PostItemProps {
   data: any;
   userId?: string;
 }
 // export const revalidate = 0;
 const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
-
-  
   const { data: session, status } = useSession();
-
- 
 
   const router = useRouter();
   const loginModal = useLoginModel();
-
-
-
-
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // New state
 
@@ -81,8 +72,6 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           );
           toast.success("Post Unliked");
           router.refresh();
-
-
         } else {
           //
           await axios.post("https://backlitter.onrender.com/like", {
@@ -91,8 +80,6 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           });
           toast.success("Post Liked");
           router.refresh();
-  
- 
         }
       } catch (error) {
         console.log("el error", error);
@@ -111,17 +98,14 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
     return formatDistanceToNowStrict(new Date(data.createdAt));
   }, [data.createdAt]);
 
+  const [isMounted, setIsMounted] = useState(false);
 
- const [isMounted, setIsMounted] = useState(false);
-
- useEffect(() => {
-   setIsMounted(true);
- }, []);
- if (!isMounted) {
-   return null;
- }
-
-
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div

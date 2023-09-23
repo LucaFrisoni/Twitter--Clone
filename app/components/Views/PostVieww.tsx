@@ -33,10 +33,10 @@
 
 "use client";
 import React, { useEffect, useState } from "react";
-import Header from "./Header";
-import PostItem from "./posts/PostItem";
-import Form from "./Form";
-import CommentFeed from "./posts/CommentFeed";
+import Header from "../Header";
+import PostItem from "../posts/PostItem";
+import Form from "../Form";
+import CommentFeed from "../posts/CommentFeed";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 

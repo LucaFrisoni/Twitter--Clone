@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import React from "react";
 import { ClipLoader } from "react-spinners";
-const PostVieww = dynamic(() => import("@/app/components/PostVieww"), {
+const PostVieww = dynamic(() => import("@/app/components/Views/PostVieww"), {
   ssr: false,
   loading: () => (
     <div className=" flex justify-center items-center h-full">
