@@ -1,4 +1,4 @@
-import axios from "axios";
+"use client"
 import HomeView from "./components/Views/HomeView";
 
 const Home = async () => {
