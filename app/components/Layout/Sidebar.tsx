@@ -50,7 +50,7 @@ const Sidebar = () => {
     {
       icon: BsHouseFill,
       label: "Home",
-      href: "/home",
+      href: "/",
     },
     {
       icon: BsBellFill,
