@@ -1,7 +1,7 @@
 "use client"
 import HomeView from "./components/Views/HomeView";
 
-const Home = async () => {
+const Home = () => {
   return (
     <>
       <HomeView />
