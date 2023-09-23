@@ -1,10 +1,10 @@
 import React from 'react'
 import HomeView from '../components/Views/HomeView'
 
-const Home = () => {
+const Homee = () => {
   return (
     <div><HomeView /></div>
   )
 }
 
-export default Home
+export default Homee
