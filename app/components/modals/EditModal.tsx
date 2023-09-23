@@ -25,7 +25,7 @@ const EditModal = () => {
   const [email, setEmail] = useState<string | undefined>("");
 
   const user = useSelector((state: any) => state.user);
- 
+
   useEffect(() => {
     setEmail(user?.email);
     setProfileImage(user?.profileImage);
@@ -66,6 +66,7 @@ const EditModal = () => {
         return toast.error("Username Already Exist");
       }
       toast.error("Something went wrong");
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

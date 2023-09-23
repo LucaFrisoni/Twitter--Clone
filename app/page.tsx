@@ -4,22 +4,11 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import PostFeed from "./components/posts/PostFeed";
+import Header from "./components/Header";
+import Form from "./components/Form";
 
-const Header = dynamic(() => import("./components/Header"), {
-  loading: () => (
-    <div className=" flex justify-center items-center h-full">
-      <ClipLoader color="lightblue" size={80} />
-    </div>
-  ),
-});
 
-const Form = dynamic(() => import("./components/Form"), {
-  loading: () => (
-    <div className=" flex justify-center items-center h-full">
-      <ClipLoader color="lightblue" size={80} />
-    </div>
-  ),
-});
+
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +19,9 @@ const Home = () => {
     );
     setPost(allPostsDataa);
   };
+
+
+
 
   useEffect(() => {
     setIsLoading(false);
@@ -44,6 +36,7 @@ const Home = () => {
         </div>
       ) : (
         <div>
+
           <Header label="Home" />
           <Form placeholder="What`s happening?" />
           <PostFeed allTweets={allPostsData} />
