@@ -1,11 +1,10 @@
 "use client"
+import { useRouter } from "next/navigation";
 import HomeView from "./components/Views/HomeView";
 
 const Home = () => {
-  return (
-    <>
-      <HomeView />
-    </>
-  );
+  const router = useRouter()
+  return  router.push("/home")
+ 
 };
 export default Home;
