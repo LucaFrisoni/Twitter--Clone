@@ -5,8 +5,6 @@ import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
 import PostItem from "./PostItem";
 
-
-
 interface PostFeedProps {
   userId?: string;
   allTweets?: Post[];
@@ -29,7 +27,9 @@ const PostFeed: React.FC<PostFeedProps> = ({
   if (!isMounted) {
     return null;
   }
-
+  if (dataUserId == "They are not post available") {
+    dataUserId = [];
+  }
   return (
     <>
       {isLoading ? ( // Renderiza el loader si isLoading es true
@@ -41,7 +41,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
           <PostItem userId={userId} key={tweet._id} data={tweet} />
         ))
       ) : (
-        dataUserId.map((tweet: Post) => (
+        dataUserId?.map((tweet: Post) => (
           <PostItem userId={userId} key={tweet._id} data={tweet} />
         ))
       )}

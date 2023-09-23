@@ -17,7 +17,7 @@ useEffect(() => {
         `https://backlitter.onrender.com/notifications/${user._id}`
       );
       let notificationss = data;
-      console.log(notificationss);
+
       setNotifications(notificationss);
     }
   };
