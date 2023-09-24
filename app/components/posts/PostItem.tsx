@@ -9,9 +9,15 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { AiOutlineHeart, AiFillHeart, AiOutlineMessage } from "react-icons/ai";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { FiMoreHorizontal } from "react-icons/fi";
 import debounce from "lodash.debounce";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
+import { BsFillTrashFill } from "react-icons/bs";
 interface PostItemProps {
   data: any;
   userId?: string;
@@ -107,10 +113,27 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
     return null;
   }
 
+
+const handleDropdownClick = (event: any) => {
+  event.stopPropagation(); // Evita la propagación del evento al elemento padre
+};
+
+  const handleDelete = async () => {
+    try {
+      
+      await axios.delete(`http://localhost:3001/delete/posts?postId=${data._id}`);
+      router.refresh()
+      return toast.success("Tweet Deleted")
+    } catch (error) {
+      console.log(error)
+      return toast.error("Something went wrong")
+    }
+  };
+
   return (
     <div
       className="border-b-[1px]
-  border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
+  border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition relative"
       onClick={goToPost}
     >
       <div className=" flex flex-row items-start gap-3">
@@ -131,6 +154,38 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
               @{data.user?.username}
             </span>
             <span className=" text-neutral-500 text-sm">{createdAt}</span>
+            <div
+              className="flex justify-center items-center group absolute right-5 "
+              onClick={handleDropdownClick}
+            >
+              <div className="bg-sky-500/10 h-9 w-9 rounded-full absolute hidden group-hover:flex transition"></div>
+              <div className=" z-20">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <FiMoreHorizontal className=" text-neutral-500 hover:text-sky-700 transition  " />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className=" min-w-[230px]  hover:bg-neutral-900"
+                    side="bottom"
+                    style={{
+                      boxShadow: " 0 0 10px rgba(74, 85, 104)",
+                      background:
+                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
+                    }}
+                  >
+                    <DropdownMenuItem
+                      className="flex gap-x-2 w-full bg-black"
+                      onClick={handleDelete}
+                    >
+                      <BsFillTrashFill className="text-red-700 ml-1.5" />
+                      <span className="text-red-700 font-bold text-base">
+                        Delete
+                      </span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
           </div>
           <div className=" text-white mt-1 max-w-sm ">
             <p className="whitespace-normal break-words">{data.body}</p>

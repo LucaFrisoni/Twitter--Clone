@@ -1,6 +1,6 @@
-import SelectMonths from "@/libs/Antd/Select";
-import SelectYear from "@/libs/Antd/SelectYear";
-import LineChart from "@/libs/reactCharts/Line";
+import SelectMonths from "@/lib/Antd/Select";
+import SelectYear from "@/lib/Antd/SelectYear";
+import LineChart from "@/lib/reactCharts/Line";
 import { Button } from "antd";
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
