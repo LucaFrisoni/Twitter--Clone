@@ -121,7 +121,9 @@ const handleDropdownClick = (event: any) => {
   const handleDelete = async () => {
     try {
       
-      await axios.delete(`http://localhost:3001/delete/posts?postId=${data._id}`);
+      await axios.delete(
+        `https://backlitter.onrender.com/delete/posts?postId=${data._id}`
+      );
       router.refresh()
       return toast.success("Tweet Deleted")
     } catch (error) {
