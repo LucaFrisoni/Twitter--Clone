@@ -12,7 +12,13 @@ import Button from "./Button";
 import Avatar from "./Avatar";
 import { useSelector } from "react-redux";
 import debounce from "lodash.debounce";
-
+import EmojiPicker from "emoji-picker-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/components/ui/popover";
+import { Smile } from "lucide-react";
 interface FormProps {
   placeholder: string;
   isComment?: boolean;
@@ -69,7 +75,6 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       toast.success("Tweet Created");
       setBody("");
       router.refresh();
-   
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -78,6 +83,11 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
   }, [body, router, isComment, postId, user?.email, user?._id]);
 
   const debounceTweet = debounce(onSubmit, 1000);
+
+  const handleEmoji = (data: any) => {
+    console.log(data);
+    setBody((prevBody) => prevBody + data.emoji);
+  };
 
   return (
     <div className=" border-b-[1px] border-neutral-800 px-5 py-2">
@@ -110,7 +120,28 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
               placeholder={placeholder}
             ></textarea>
             <hr className="opacity-0 peer-focus:opacity-100 h-1[px] border-neutral-800 transition" />
-            <div className=" mt-4 flex flex-row justify-end">
+
+            {/* Nuevas features */}
+
+            <div className=" mt-4 flex flex-row justify-between">
+              <div className="flex align-bottom">
+                <Popover>
+                  <PopoverTrigger>
+                    <Smile className="text-sky-500  hover:text-sky-600  transition" />
+                  </PopoverTrigger>
+                  <PopoverContent
+                    side="bottom"
+                    sideOffset={40}
+                    className="bg-transparent border-none shadow-none drop-shadow-none mb-16 "
+                  >
+                    <EmojiPicker
+                      height={400}
+                      width={300}
+                      onEmojiClick={handleEmoji}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
               {limit && (
                 <p className=" text-red-800 p-3">Maximum 400 characters</p>
               )}
