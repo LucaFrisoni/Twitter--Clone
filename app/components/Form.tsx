@@ -89,6 +89,16 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
     setBody((prevBody) => prevBody + data.emoji);
   };
 
+  // const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  //   if (e.key === "Enter") {
+  //     // Evita que se cree una nueva línea en el textarea
+  //     e.preventDefault();
+  //     // Reemplaza la pulsación de "Enter" con '\n' en el estado 'body'
+  //     setBody((prevBody) => prevBody + "\n");
+  //   }
+  // };
+  console.log("BodyForm", body);
+
   return (
     <div className=" border-b-[1px] border-neutral-800 px-5 py-2">
       {user ? (
@@ -102,6 +112,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
           </div>
           <div className=" w-full ">
             <textarea
+              // onKeyPress={handleKeyPress}
               disabled={isLoading}
               onChange={(e) => {
                 setBody(e.target.value);

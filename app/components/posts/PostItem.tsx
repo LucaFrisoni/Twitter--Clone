@@ -187,6 +187,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   if (!isMounted) {
     return null;
   }
+  console.log("PostItem =>", data.body);
   return (
     <div
       className="border-b-[1px]
@@ -253,7 +254,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
               </div>
             </div>
             <div className=" text-white mt-1 max-w-sm ">
-              <p className="whitespace-normal break-words">{data.body}</p>
+              <p className="whitespace-pre-line break-words">{data.body}</p>
             </div>
             <div className=" flex flex-row items-center mt-3 gap-10">
               <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
