@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Avatar from "../Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
@@ -16,16 +16,29 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import { BsFillTrashFill } from "react-icons/bs";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { PiPencilSimpleLineLight } from "react-icons/pi";
+import {
+  AiFillHeart,
+  AiOutlineHeart,
+  AiOutlineMessage,
+  AiOutlineRetweet,
+} from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import useLoginModel from "@/hooks/zustandHooks/useLoginModel";
+import debounce from "lodash.debounce";
 
 interface QuoteItemProps {
   data: any;
 }
 
 const QuoteItem = ({ data }: QuoteItemProps) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
-
+  const [isDataLoaded, setIsDataLoaded] = useState(!!data.likeIds);
+  const [isDataLoadedRT, setIsDataLoadedRT] = useState(!!data.retweets);
   const user = useSelector((state: any) => state.user);
 
+  const loginModal = useLoginModel();
   const { onClose } = useQuoteModel();
 
   const goToPost = useCallback(
@@ -85,6 +98,69 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
       return toast.error("Something went wrong");
     }
   };
+
+  useEffect(() => {
+   
+    setIsDataLoaded(!!data.likeIds);
+  }, [data.likeIds,data.postId.likeIds]);
+
+  useEffect(() => {
+   
+    setIsDataLoadedRT(!!data.retweets);
+  }, [data.retweets]);
+
+  const isRetweet = useMemo(() => {
+    if (!isDataLoadedRT) {
+      return false; // O cualquier valor predeterminado según tu lógica
+    }
+    return (
+      data.retweets?.some(
+        (retweet: any) => retweet.toString() === user?._id.toString()
+      ) || false
+    );
+  }, [isDataLoadedRT, user?._id, data.retweets, router]);
+
+  const isLiked = useMemo(() => {
+    if (!isDataLoaded) {
+      return false; // O cualquier valor predeterminado según tu lógica
+    }
+
+    return (
+      data.likeIds?.some((like: any) => like.userId === user?._id) || false
+    );
+  }, [isDataLoaded, user?._id, data.likeIds]);
+
+  const onLike = useCallback(
+    async (event: any) => {
+      event.stopPropagation();
+      if (!session) {
+        return loginModal.onOpen();
+      }
+      try {
+        if (isLiked) {
+          await axios.delete(
+            `https://backlitter.onrender.com/likeQuote?postId=${data._id}&currentUserId=${user?._id}`
+          );
+          toast.success("Quote Unliked");
+          router.refresh();
+        } else {
+          //
+          await axios.post("https://backlitter.onrender.com/likeQuote", {
+            postId: data._id,
+            currentUserId: user._id,
+          });
+          toast.success("Quote Liked");
+          router.refresh();
+        }
+      } catch (error) {
+        console.log("el error", error);
+        toast.error("Something went wrong");
+      }
+    },
+    [loginModal, user, data._id, router, isLiked, session]
+  );
+
+  const debouncedOnLike = debounce(onLike, 1000);
 
   return (
     <div className="w-full">
@@ -208,7 +284,7 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
           </div>
           {/* PostUser */}
 
-          <div className="flex items-center justify-center ">
+          <div className="flex items-center justify-center  ">
             <div
               onClick={goToPost}
               className="hover:bg-neutral-800 w-[80%] flex flex-row items-start gap-3 border border-neutral-800 p-2 rounded-lg mt-2"
@@ -237,6 +313,83 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+          {/* Features */}
+          <div className=" flex flex-row  items-center  mt-3 gap-10 ">
+            <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500 ml-[10%]">
+              <AiOutlineMessage size={20} />
+              <p>{data.comments?.length || 0}</p>
+            </div>
+            {/* Retweet & Quote Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                  {isRetweet ? (
+                    <AiOutlineRetweet className="text-emerald-500" size={20} />
+                  ) : (
+                    <AiOutlineRetweet size={20} />
+                  )}
+                  <p>{data.retweets?.length || 0}</p>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className=" min-w-[230px]  hover:bg-neutral-900"
+                side="bottom"
+                style={{
+                  boxShadow: " 0 0 10px rgba(74, 85, 104)",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
+                }}
+              >
+                {isRetweet ? (
+                  <>
+                    <DropdownMenuItem
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        // debouncedOnRetweet(event);
+                      }}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <AiOutlineRetweet className="text-white" size={20} />
+                      <span className="text-white font-bold text-base">
+                        Delete Retweet
+                      </span>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        // debouncedOnRetweet(event);
+                      }}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <AiOutlineRetweet className="text-white" size={20} />
+                      <span className="text-white font-bold text-base">
+                        Retweet
+                      </span>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <div
+              onClick={(event) => {
+                event.stopPropagation();
+                debouncedOnLike(event);
+              }}
+              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500"
+            >
+              {isLiked ? (
+                <AiFillHeart color={"red"} size={20} />
+              ) : (
+                <AiOutlineHeart size={20} />
+              )}
+
+              <p>{data.likeIds?.length}</p>
             </div>
           </div>
         </div>
