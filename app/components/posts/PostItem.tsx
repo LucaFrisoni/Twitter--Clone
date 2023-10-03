@@ -12,6 +12,9 @@ import {
   AiOutlineMessage,
   AiOutlineRetweet,
 } from "react-icons/ai";
+import { BsFillTrashFill } from "react-icons/bs";
+import { PiPencilSimpleLineLight } from "react-icons/pi";
+
 import toast from "react-hot-toast";
 import axios from "axios";
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -22,8 +25,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { BsFillTrashFill } from "react-icons/bs";
 import PostItemRetweet from "./PostItemRetweet";
+import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
+import QuoteItem from "./QuoteItem";
+
 interface PostItemProps {
   data: any;
   userId?: string;
@@ -32,7 +37,10 @@ interface PostItemProps {
 const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const loginModal = useLoginModel();
+  const { onOpen } = useQuoteModel();
+
   const user = useSelector((state: any) => state.user);
 
   const [isDataLoaded, setIsDataLoaded] = useState(!!data.likeIds);
@@ -179,6 +187,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
       return toast.error("Something went wrong");
     }
   };
+
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -187,7 +196,12 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
   if (!isMounted) {
     return null;
   }
-  console.log("PostItem =>", data.body);
+
+  const handleQuote = (e: any) => {
+    e.stopPropagation();
+    onOpen(data);
+  };
+
   return (
     <div
       className="border-b-[1px]
@@ -201,7 +215,11 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           goToUser={goToUser}
           createdAt={createdAt}
         />
-      ) : (
+      ) : null}
+
+      {data.userQuote ? <QuoteItem data={data} /> : null}
+
+      {data.user ? (
         <div className=" flex flex-row items-start gap-3">
           <Avatar
             profileImage={data.user?.profileImage}
@@ -226,30 +244,33 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
               >
                 <div className="bg-sky-500/10 h-9 w-9 rounded-full absolute hidden group-hover:flex transition"></div>
                 <div className=" z-20">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <FiMoreHorizontal className=" text-neutral-500 hover:text-sky-700 transition  " />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className=" min-w-[230px]  hover:bg-neutral-900"
-                      side="bottom"
-                      style={{
-                        boxShadow: " 0 0 10px rgba(74, 85, 104)",
-                        background:
-                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
-                      }}
-                    >
-                      <DropdownMenuItem
-                        className="flex gap-x-2 w-full bg-black"
-                        onClick={handleDelete}
+                  {/* Delete Menu */}
+                  {data.user.email == user?.email ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <FiMoreHorizontal className=" text-neutral-500 hover:text-sky-700 transition  " />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className=" min-w-[230px]  hover:bg-neutral-900"
+                        side="bottom"
+                        style={{
+                          boxShadow: " 0 0 10px rgba(74, 85, 104)",
+                          background:
+                            "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
+                        }}
                       >
-                        <BsFillTrashFill className="text-red-700 ml-1.5" />
-                        <span className="text-red-700 font-bold text-base">
-                          Delete
-                        </span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        <DropdownMenuItem
+                          className="flex gap-x-2 w-full bg-black"
+                          onClick={handleDelete}
+                        >
+                          <BsFillTrashFill className="text-red-700 ml-1.5" />
+                          <span className="text-red-700 font-bold text-base">
+                            Delete
+                          </span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -261,21 +282,87 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
                 <AiOutlineMessage size={20} />
                 <p>{data.comments?.length || 0}</p>
               </div>
-
-              <div
-                onClick={(event) => {
-                  event.stopPropagation();
-                  debouncedOnRetweet(event);
-                }}
-                className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500"
-              >
-                {isRetweet ? (
-                  <AiOutlineRetweet className="text-emerald-500" size={20} />
-                ) : (
-                  <AiOutlineRetweet size={20} />
-                )}
-                <p>{data.retweets?.length || 0}</p>
-              </div>
+              {/* Retweet & Quote Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                    {isRetweet ? (
+                      <AiOutlineRetweet
+                        className="text-emerald-500"
+                        size={20}
+                      />
+                    ) : (
+                      <AiOutlineRetweet size={20} />
+                    )}
+                    <p>{data.retweets?.length || 0}</p>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className=" min-w-[230px]  hover:bg-neutral-900"
+                  side="bottom"
+                  style={{
+                    boxShadow: " 0 0 10px rgba(74, 85, 104)",
+                    background:
+                      "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
+                  }}
+                >
+                  {isRetweet ? (
+                    <>
+                      <DropdownMenuItem
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          debouncedOnRetweet(event);
+                        }}
+                        className="flex gap-x-2 w-full bg-black"
+                      >
+                        <AiOutlineRetweet className="text-white" size={20} />
+                        <span className="text-white font-bold text-base">
+                          Delete Retweet
+                        </span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={handleQuote}
+                        className="flex gap-x-2 w-full bg-black"
+                      >
+                        <PiPencilSimpleLineLight
+                          className="text-white"
+                          size={20}
+                        />
+                        <span className="text-white font-bold text-base">
+                          Quote
+                        </span>
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          debouncedOnRetweet(event);
+                        }}
+                        className="flex gap-x-2 w-full bg-black"
+                      >
+                        <AiOutlineRetweet className="text-white" size={20} />
+                        <span className="text-white font-bold text-base">
+                          Retweet
+                        </span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={handleQuote}
+                        className="flex gap-x-2 w-full bg-black"
+                      >
+                        <PiPencilSimpleLineLight
+                          className="text-white"
+                          size={20}
+                        />
+                        <span className="text-white font-bold text-base">
+                          Quote
+                        </span>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               <div
                 onClick={(event) => {
@@ -295,7 +382,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

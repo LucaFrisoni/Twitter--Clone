@@ -6,6 +6,7 @@ import {
   AiOutlineMessage,
   AiOutlineRetweet,
 } from "react-icons/ai";
+import { PiPencilSimpleLineLight } from "react-icons/pi";
 import Avatar from "../Avatar";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -13,6 +14,13 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 import { useSession } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
+import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
 
 interface PostItemRetweetProps {
   data: any;
@@ -27,10 +35,15 @@ const PostItemRetweet = ({
   createdAt,
   loginModal,
 }: PostItemRetweetProps) => {
+  const { onOpen } = useQuoteModel();
+
   const { data: session, status } = useSession();
+
   const user = useSelector((state: any) => state.user);
+
   const [isDataLoaded, setIsDataLoaded] = useState(!!data.postId?.likeIds);
   const [isDataLoadedRT, setIsDataLoadedRT] = useState(!!data.postId?.retweets);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -127,6 +140,11 @@ const PostItemRetweet = ({
 
   const debouncedOnRetweet = debounce(onRetweet, 1000);
 
+  const handleQuote = (e: any) => {
+    e.stopPropagation();
+    onOpen(data);
+  };
+
   return (
     <div>
       <div className="flex flex-row gap-x-2 items-center p-2">
@@ -163,20 +181,83 @@ const PostItemRetweet = ({
               <p>{data.postId.comments?.length || 0}</p>
             </div>
 
-            <div
-              onClick={(event) => {
-                event.stopPropagation();
-                debouncedOnRetweet(event);
-              }}
-              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500"
-            >
-              {isRetweet ? (
-                <AiOutlineRetweet className="text-emerald-500" size={20} />
-              ) : (
-                <AiOutlineRetweet size={20} />
-              )}
-              <p>{data.postId.retweets?.length || 0}</p>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                  {isRetweet ? (
+                    <AiOutlineRetweet className="text-emerald-500" size={20} />
+                  ) : (
+                    <AiOutlineRetweet size={20} />
+                  )}
+                  <p>{data.postId.retweets?.length || 0}</p>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className=" min-w-[230px]  hover:bg-neutral-900"
+                side="bottom"
+                style={{
+                  boxShadow: " 0 0 10px rgba(74, 85, 104)",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)",
+                }}
+              >
+                {isRetweet ? (
+                  <>
+                    <DropdownMenuItem
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        debouncedOnRetweet(event);
+                      }}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <AiOutlineRetweet className="text-white" size={20} />
+                      <span className="text-white font-bold text-base">
+                        Delete Retweet
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleQuote}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <PiPencilSimpleLineLight
+                        className="text-white"
+                        size={20}
+                      />
+                      <span className="text-white font-bold text-base">
+                        Quote
+                      </span>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        debouncedOnRetweet(event);
+                      }}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <AiOutlineRetweet className="text-white" size={20} />
+                      <span className="text-white font-bold text-base">
+                        Retweet
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleQuote}
+                      className="flex gap-x-2 w-full bg-black"
+                    >
+                      <PiPencilSimpleLineLight
+                        className="text-white"
+                        size={20}
+                      />
+                      <span className="text-white font-bold text-base">
+                        Quote
+                      </span>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <div
               onClick={(event) => {

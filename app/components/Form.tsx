@@ -19,18 +19,29 @@ import {
   PopoverTrigger,
 } from "@/app/components/ui/popover";
 import { Smile } from "lucide-react";
+import QuoteItem from "./posts/QuoteItem";
+import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
+
 interface FormProps {
   placeholder: string;
   isComment?: boolean;
   postId?: string;
+  quote?: boolean;
+  data?: any;
 }
 
-const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
+const Form: React.FC<FormProps> = ({
+  data,
+  placeholder,
+  isComment,
+  postId,
+  quote,
+}) => {
   const router = useRouter();
 
   const registerModal = useRegisterModal();
   const loginModal = useLoginModel();
-
+  const quoteModal = useQuoteModel();
   const user = useSelector((state: any) => state.user);
 
   const [body, setBody] = useState("");
@@ -54,6 +65,28 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       setIsLoading(true);
 
       const email = user?.email;
+
+      if (quote) {
+        if (data.userRetweet) {
+          await axios.post("https://backlitter.onrender.com/quotes", {
+            postId: data.postId._id,
+            userQuote: user._id,
+            body,
+          });
+        } else {
+          await axios.post("https://backlitter.onrender.com/quotes", {
+            postId: data._id,
+            userQuote: user._id,
+            body,
+          });
+        }
+        toast.success("Quote Created");
+        setBody("");
+        quoteModal.onClose();
+        router.refresh();
+        setIsLoading(false);
+        return;
+      }
 
       if (isComment) {
         await axios.post("https://backlitter.onrender.com/comments", {
@@ -80,7 +113,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [body, router, isComment, postId, user?.email, user?._id]);
+  }, [body, router, isComment, postId, user?.email, user?._id, quote]);
 
   const debounceTweet = debounce(onSubmit, 1000);
 
@@ -88,16 +121,6 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
     console.log(data);
     setBody((prevBody) => prevBody + data.emoji);
   };
-
-  // const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  //   if (e.key === "Enter") {
-  //     // Evita que se cree una nueva línea en el textarea
-  //     e.preventDefault();
-  //     // Reemplaza la pulsación de "Enter" con '\n' en el estado 'body'
-  //     setBody((prevBody) => prevBody + "\n");
-  //   }
-  // };
-  console.log("BodyForm", body);
 
   return (
     <div className=" border-b-[1px] border-neutral-800 px-5 py-2">
@@ -130,10 +153,11 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
               text-white"
               placeholder={placeholder}
             ></textarea>
+
             <hr className="opacity-0 peer-focus:opacity-100 h-1[px] border-neutral-800 transition" />
-
+            {/* Quote Tweets */}
+            {quote === true ? <QuoteItem data={data} /> : null}
             {/* Nuevas features */}
-
             <div className=" mt-4 flex flex-row justify-between">
               <div className="flex align-bottom">
                 <Popover>
