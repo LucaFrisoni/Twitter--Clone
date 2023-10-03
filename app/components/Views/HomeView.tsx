@@ -1,17 +1,18 @@
+"use client";
 import React from "react";
 import Header from "../Header";
 import Form from "../Form";
 import PostFeed from "../posts/PostFeed";
 import axios from "axios";
 
-// interface HomeViewProps {
-//   allPostsData: any;
-// }
+interface HomeViewProps {
+  allPostsDataa?: any;
+}
 
-const HomeView = async () => {
-  const { data: allPostsDataa } = await axios.get(
-    `https://backlitter.onrender.com/posts`
-  );
+const HomeView = ({ allPostsDataa }: HomeViewProps) => {
+  // const { data: allPostsDataa } = await axios.get(
+  //   `https://backlitter.onrender.com/posts`
+  // );
   return (
     <div>
       <Header label="Home" />

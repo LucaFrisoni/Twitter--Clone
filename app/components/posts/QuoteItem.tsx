@@ -16,7 +16,6 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import { BsFillTrashFill } from "react-icons/bs";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { PiPencilSimpleLineLight } from "react-icons/pi";
 import {
   AiFillHeart,
   AiOutlineHeart,
