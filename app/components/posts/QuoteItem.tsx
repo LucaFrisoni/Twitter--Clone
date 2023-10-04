@@ -28,9 +28,10 @@ import debounce from "lodash.debounce";
 
 interface QuoteItemProps {
   data: any;
+  onRefresh: () => void;
 }
 
-const QuoteItem = ({ data }: QuoteItemProps) => {
+const QuoteItem = ({ data, onRefresh }: QuoteItemProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isDataLoaded, setIsDataLoaded] = useState(!!data.likeIds);
@@ -90,7 +91,8 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
       await axios.delete(
         `https://backlitter.onrender.com/quotes?quoteId=${data._id}`
       );
-      router.refresh();
+      // router.refresh();
+      onRefresh()
       return toast.success("Quote Deleted");
     } catch (error) {
       console.log(error);
@@ -99,12 +101,10 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
   };
 
   useEffect(() => {
-   
     setIsDataLoaded(!!data.likeIds);
-  }, [data.likeIds,data.postId.likeIds]);
+  }, [data.likeIds]);
 
   useEffect(() => {
-   
     setIsDataLoadedRT(!!data.retweets);
   }, [data.retweets]);
 
@@ -141,7 +141,8 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
             `https://backlitter.onrender.com/likeQuote?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Quote Unliked");
-          router.refresh();
+          // router.refresh();
+          onRefresh()
         } else {
           //
           await axios.post("https://backlitter.onrender.com/likeQuote", {
@@ -149,7 +150,8 @@ const QuoteItem = ({ data }: QuoteItemProps) => {
             currentUserId: user._id,
           });
           toast.success("Quote Liked");
-          router.refresh();
+          // router.refresh();
+             onRefresh();
         }
       } catch (error) {
         console.log("el error", error);

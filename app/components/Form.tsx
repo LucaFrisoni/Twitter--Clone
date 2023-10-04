@@ -28,6 +28,7 @@ interface FormProps {
   postId?: string;
   quote?: boolean;
   data?: any;
+  onRefresh: () => void;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -36,6 +37,7 @@ const Form: React.FC<FormProps> = ({
   isComment,
   postId,
   quote,
+  onRefresh,
 }) => {
   const router = useRouter();
 
@@ -83,7 +85,8 @@ const Form: React.FC<FormProps> = ({
         toast.success("Quote Created");
         setBody("");
         quoteModal.onClose();
-        router.refresh();
+        // router.refresh();
+        onRefresh();
         setIsLoading(false);
         return;
       }
@@ -96,7 +99,8 @@ const Form: React.FC<FormProps> = ({
         });
         toast.success("Comment Created");
         setBody("");
-        router.refresh();
+        // router.refresh();
+        onRefresh();
         setIsLoading(false);
         return;
       }
@@ -107,7 +111,8 @@ const Form: React.FC<FormProps> = ({
 
       toast.success("Tweet Created");
       setBody("");
-      router.refresh();
+      // router.refresh();
+           onRefresh();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -156,7 +161,9 @@ const Form: React.FC<FormProps> = ({
 
             <hr className="opacity-0 peer-focus:opacity-100 h-1[px] border-neutral-800 transition" />
             {/* Quote Tweets */}
-            {quote === true ? <QuoteItem data={data} /> : null}
+            {quote === true ? (
+              <QuoteItem onRefresh={onRefresh} data={data} />
+            ) : null}
             {/* Nuevas features */}
             <div className=" mt-4 flex flex-row justify-between">
               <div className="flex align-bottom">

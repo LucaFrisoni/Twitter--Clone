@@ -8,13 +8,15 @@ import PostItem from "./PostItem";
 interface PostFeedProps {
   userId?: string;
   allTweets?: Post[];
-  dataUserId?: any; // Cambia el tipo de allTweets a Post[]
+  dataUserId?: any;
+  onRefresh: () => void; // Cambia el tipo de allTweets a Post[]
 }
 
 const PostFeed: React.FC<PostFeedProps> = ({
   userId,
   allTweets,
   dataUserId,
+  onRefresh,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Nuevo estado para controlar la carga
@@ -38,11 +40,21 @@ const PostFeed: React.FC<PostFeedProps> = ({
         </div>
       ) : allTweets ? (
         allTweets.map((tweet: Post) => (
-          <PostItem userId={userId} key={tweet._id} data={tweet} />
+          <PostItem
+            userId={userId}
+            key={tweet._id}
+            data={tweet}
+            onRefresh={onRefresh}
+          />
         ))
       ) : (
         dataUserId?.map((tweet: Post) => (
-          <PostItem userId={userId} key={tweet._id} data={tweet} />
+          <PostItem
+            userId={userId}
+            key={tweet._id}
+            data={tweet}
+            onRefresh={onRefresh}
+          />
         ))
       )}
     </>

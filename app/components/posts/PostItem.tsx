@@ -32,9 +32,10 @@ import QuoteItem from "./QuoteItem";
 interface PostItemProps {
   data: any;
   userId?: string;
+  onRefresh: () => void;
 }
 // export const revalidate = 0;
-const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
+const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -98,7 +99,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
             `https://backlitter.onrender.com/like?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Post Unliked");
-          router.refresh();
+          onRefresh();
+          // router.refresh();
         } else {
           //
           await axios.post("https://backlitter.onrender.com/like", {
@@ -106,7 +108,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
             currentUserId: user._id,
           });
           toast.success("Post Liked");
-          router.refresh();
+          onRefresh();
+          // router.refresh();
         }
       } catch (error) {
         console.log("el error", error);
@@ -145,7 +148,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
             `https://backlitter.onrender.com/retweets?postId=${data._id}&userRetweet=${user?._id}`
           );
           toast.success("Retweet Deleted");
-          router.refresh();
+          // router.refresh();
+          onRefresh();
         } else {
           await axios.post("https://backlitter.onrender.com/retweets", {
             postId: data._id,
@@ -153,6 +157,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           });
           toast.success("Retweet Created");
           router.refresh();
+          onRefresh();
         }
       } catch (error) {
         console.log("el error", error);
@@ -180,7 +185,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
       await axios.delete(
         `https://backlitter.onrender.com/delete/posts?postId=${data._id}`
       );
-      router.refresh();
+      onRefresh();
+      // router.refresh();
       return toast.success("Tweet Deleted");
     } catch (error) {
       console.log(error);
@@ -199,7 +205,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
 
   const handleQuote = (e: any) => {
     e.stopPropagation();
-    onOpen(data);
+    onOpen(data, onRefresh);
   };
 
   return (
@@ -214,10 +220,11 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
           data={data}
           goToUser={goToUser}
           createdAt={createdAt}
+          onRefresh={onRefresh}
         />
       ) : null}
 
-      {data.userQuote ? <QuoteItem data={data} /> : null}
+      {data.userQuote ? <QuoteItem data={data} onRefresh={onRefresh} /> : null}
 
       {data.user ? (
         <div className=" flex flex-row items-start gap-3">

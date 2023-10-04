@@ -11,6 +11,7 @@ interface ModalQuoteProps {
   body?: React.ReactElement;
   disabled?: boolean;
   data: any;
+  onRefresh:()=>void
 }
 
 const ModalQuote: React.FC<ModalQuoteProps> = ({
@@ -19,9 +20,8 @@ const ModalQuote: React.FC<ModalQuoteProps> = ({
   disabled,
   isOpen,
   data,
+  onRefresh,
 }) => {
- 
-
   const handleClose = useCallback(() => {
     if (disabled) return;
     onClose();
@@ -48,7 +48,12 @@ const ModalQuote: React.FC<ModalQuoteProps> = ({
           </div>
           {/* Body */}
           <div className=" relative p-10 flex-auto">
-            <Form placeholder="Add a Quote" quote={true} data={data} />
+            <Form
+              placeholder="Add a Quote"
+              quote={true}
+              data={data}
+              onRefresh={onRefresh}
+            />
           </div>
         </div>
       </div>

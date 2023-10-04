@@ -5,9 +5,7 @@ import Form from "../Form";
 import Modal from "../Modal";
 import ModalQuote from "../ModalQuote";
 const QuoteModal = () => {
-  const { isOpen, data, onClose } = useQuoteModel();
-
-
+  const { isOpen, data, onClose, onRefresh } = useQuoteModel();
 
   return (
     <div>
@@ -16,6 +14,7 @@ const QuoteModal = () => {
         title="Create a Quote"
         onClose={onClose}
         data={data}
+        onRefresh={onRefresh}
       />
     </div>
   );
