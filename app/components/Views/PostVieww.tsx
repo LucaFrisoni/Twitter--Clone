@@ -1,35 +1,3 @@
-// import React from "react";
-// import Header from "./Header";
-// import PostItem from "./posts/PostItem";
-// import Form from "./Form";
-
-// import CommentFeed from "./posts/CommentFeed";
-// import axios from "axios";
-// interface PostViewwProps {
-//   postId: string;
-// }
-// export const revalidate = 0;
-// const PostVieww = async ({ postId }: PostViewwProps) => {
-//   const { data } = await axios.get(
-//     `https://backlitter.onrender.com/postss/${postId}`
-//   );
-//   const post = data;
-
-//   return (
-//     <>
-//       <Header label="Tweet" showBackArrow />
-//       <PostItem data={post} />
-//       <Form
-//         postId={postId as string}
-//         isComment
-//         placeholder="Tweet your reply"
-//       />
-//       <CommentFeed comments={post?.comments} />
-//     </>
-//   );
-// };
-
-// export default PostVieww;
 
 "use client";
 import React, { useEffect, useState } from "react";
@@ -49,11 +17,6 @@ const PostView: React.FC<PostViewProps> = ({
   postId,
   refreshInterval = 10000,
 }) => {
-
-
-
-
-  
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,8 +62,13 @@ const PostView: React.FC<PostViewProps> = ({
   return (
     <>
       <Header label="Tweet" showBackArrow />
-      <PostItem data={post} />
-      <Form postId={postId} isComment placeholder="Tweet your reply" />
+      <PostItem data={post} onRefresh={fetchData} />
+      <Form
+        postId={postId}
+        isComment
+        placeholder="Tweet your reply"
+        onRefresh={fetchData}
+      />
       <CommentFeed comments={post?.comments} />
     </>
   );

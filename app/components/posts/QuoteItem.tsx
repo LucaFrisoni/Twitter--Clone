@@ -28,10 +28,11 @@ import debounce from "lodash.debounce";
 
 interface QuoteItemProps {
   data: any;
-  onRefresh: () => void;
+  onRefresh?: () => void;
+  userView?: boolean;
 }
 
-const QuoteItem = ({ data, onRefresh }: QuoteItemProps) => {
+const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isDataLoaded, setIsDataLoaded] = useState(!!data.likeIds);
@@ -91,8 +92,11 @@ const QuoteItem = ({ data, onRefresh }: QuoteItemProps) => {
       await axios.delete(
         `https://backlitter.onrender.com/quotes?quoteId=${data._id}`
       );
-      // router.refresh();
-      onRefresh()
+
+
+      if (onRefresh) {
+        onRefresh();
+      }
       return toast.success("Quote Deleted");
     } catch (error) {
       console.log(error);
@@ -141,8 +145,10 @@ const QuoteItem = ({ data, onRefresh }: QuoteItemProps) => {
             `https://backlitter.onrender.com/likeQuote?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Quote Unliked");
-          // router.refresh();
-          onRefresh()
+
+          if (onRefresh) {
+            onRefresh();
+          }
         } else {
           //
           await axios.post("https://backlitter.onrender.com/likeQuote", {
@@ -150,8 +156,10 @@ const QuoteItem = ({ data, onRefresh }: QuoteItemProps) => {
             currentUserId: user._id,
           });
           toast.success("Quote Liked");
-          // router.refresh();
-             onRefresh();
+
+          if (onRefresh) {
+            onRefresh();
+          }
         }
       } catch (error) {
         console.log("el error", error);

@@ -32,10 +32,16 @@ import QuoteItem from "./QuoteItem";
 interface PostItemProps {
   data: any;
   userId?: string;
-  onRefresh: () => void;
+  onRefresh?: () => void;
+
 }
 // export const revalidate = 0;
-const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
+const PostItem: React.FC<PostItemProps> = ({
+  data,
+  userId,
+  onRefresh,
+
+}) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -99,8 +105,10 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
             `https://backlitter.onrender.com/like?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Post Unliked");
-          onRefresh();
-          // router.refresh();
+       
+          if (onRefresh) {
+            onRefresh();
+          }
         } else {
           //
           await axios.post("https://backlitter.onrender.com/like", {
@@ -108,8 +116,10 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
             currentUserId: user._id,
           });
           toast.success("Post Liked");
-          onRefresh();
-          // router.refresh();
+       
+          if (onRefresh) {
+            onRefresh();
+          }
         }
       } catch (error) {
         console.log("el error", error);
@@ -148,16 +158,20 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
             `https://backlitter.onrender.com/retweets?postId=${data._id}&userRetweet=${user?._id}`
           );
           toast.success("Retweet Deleted");
-          // router.refresh();
-          onRefresh();
+         
+          if (onRefresh) {
+            onRefresh();
+          }
         } else {
           await axios.post("https://backlitter.onrender.com/retweets", {
             postId: data._id,
             userRetweet: user._id,
           });
           toast.success("Retweet Created");
-          router.refresh();
-          onRefresh();
+       
+          if (onRefresh) {
+            onRefresh();
+          }
         }
       } catch (error) {
         console.log("el error", error);
@@ -185,9 +199,12 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
       await axios.delete(
         `https://backlitter.onrender.com/delete/posts?postId=${data._id}`
       );
-      onRefresh();
       // router.refresh();
-      return toast.success("Tweet Deleted");
+      toast.success("Tweet Deleted");
+   
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
       console.log(error);
       return toast.error("Something went wrong");

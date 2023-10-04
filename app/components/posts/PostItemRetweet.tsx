@@ -27,7 +27,7 @@ interface PostItemRetweetProps {
   goToUser: any;
   createdAt: any;
   loginModal: any;
-  onRefresh: () => void;
+  onRefresh?: () => void;
 }
 
 const PostItemRetweet = ({
@@ -91,8 +91,9 @@ const PostItemRetweet = ({
             `https://backlitter.onrender.com/like?postId=${data.postId._id}&currentUserId=${user?._id}`
           );
           toast.success("Tweet Unliked");
-          onRefresh();
-          //  router.refresh();
+          if (onRefresh) {
+            onRefresh();
+          }
         } else {
           // // Lógica para dar like
           await axios.post("https://backlitter.onrender.com/like", {
@@ -100,8 +101,10 @@ const PostItemRetweet = ({
             currentUserId: user._id,
           });
           toast.success("Tweet Liked");
-          // router.refresh();}
-          onRefresh();
+
+          if (onRefresh) {
+            onRefresh();
+          }
         }
       } catch (error) {
         console.log("el error", error);
@@ -125,16 +128,20 @@ const PostItemRetweet = ({
             `https://backlitter.onrender.com/retweets?postId=${data.postId._id}&userRetweet=${user?._id}`
           );
           toast.success("Retweet Deleted");
-          // router.refresh();
-          onRefresh();
+
+          if (onRefresh) {
+            onRefresh();
+          }
         } else {
           await axios.post("https://backlitter.onrender.com/retweets", {
             postId: data.postId._id,
             userRetweet: user._id,
           });
           toast.success("Retweet Created");
-          // router.refresh();
-          onRefresh();
+
+          if (onRefresh) {
+            onRefresh();
+          }
         }
       } catch (error) {
         console.log("el error", error);

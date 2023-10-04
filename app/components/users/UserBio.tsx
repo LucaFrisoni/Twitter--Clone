@@ -60,10 +60,11 @@ const UserBio: React.FC<UserBioProps> = ({ user }) => {
   const debouncedOnFollow = debounce(handleFollow, 1000);
 
   const createdAt = useMemo(() => {
+     if (!user?.user.createdAt) {
+       return null; // O un valor predeterminado si lo prefieres
+     }
     return format(new Date(user?.user.createdAt), "MMMM yyyy");
   }, [user?.user.createdAt]);
-
-
 
   const totalLikes = useMemo(() => {
     return user?.user.posts.reduce(

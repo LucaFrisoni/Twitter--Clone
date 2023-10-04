@@ -112,7 +112,7 @@ const Form: React.FC<FormProps> = ({
       toast.success("Tweet Created");
       setBody("");
       // router.refresh();
-           onRefresh();
+      onRefresh();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {

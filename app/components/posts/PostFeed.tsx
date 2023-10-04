@@ -9,7 +9,8 @@ interface PostFeedProps {
   userId?: string;
   allTweets?: Post[];
   dataUserId?: any;
-  onRefresh: () => void; // Cambia el tipo de allTweets a Post[]
+  onRefresh?: () => void; // Cambia el tipo de allTweets a Post[]
+  userView?:boolean
 }
 
 const PostFeed: React.FC<PostFeedProps> = ({
@@ -17,6 +18,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
   allTweets,
   dataUserId,
   onRefresh,
+  userView,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Nuevo estado para controlar la carga
@@ -45,6 +47,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
             key={tweet._id}
             data={tweet}
             onRefresh={onRefresh}
+            userView={userView}
           />
         ))
       ) : (
@@ -54,6 +57,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
             key={tweet._id}
             data={tweet}
             onRefresh={onRefresh}
+            userView={userView}
           />
         ))
       )}
