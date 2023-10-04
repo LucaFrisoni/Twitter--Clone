@@ -10,7 +10,7 @@ interface CommentItemProps {
 
 const CommentItem: React.FC<CommentItemProps> = ({ data }) => {
   const router = useRouter();
-
+  console.log("Data =>", data);
   const goToUser = useCallback(
     (event: any) => {
       // detiene el onclick del padre

@@ -55,7 +55,13 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
     },
     [router, data]
   );
-
+  const goToQuote = useCallback(
+    (event: any) => {
+      event.stopPropagation();
+      router.push(`/posts/${data._id}`);
+    },
+    [router, data]
+  );
   const goToUser = useCallback(
     (event: any) => {
       event.stopPropagation();
@@ -83,6 +89,12 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
     return formatDistanceToNowStrict(new Date(data.createdAt));
   }, [data.createdAt]);
 
+  const createdAt2 = useMemo(() => {
+    if (data.userQuote) {
+      return formatDistanceToNowStrict(new Date(data.createdAt));
+    }
+  }, [data.createdAt]);
+
   const handleDropdownClick = (event: any) => {
     event.stopPropagation(); // Evita la propagación del evento al elemento padre
   };
@@ -92,7 +104,6 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
       await axios.delete(
         `https://backlitter.onrender.com/quotes?quoteId=${data._id}`
       );
-
 
       if (onRefresh) {
         onRefresh();
@@ -171,6 +182,43 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
 
   const debouncedOnLike = debounce(onLike, 1000);
 
+  const onRetweet = useCallback(
+    async (event: any) => {
+      event.stopPropagation();
+      if (!session) {
+        return loginModal.onOpen();
+      }
+      try {
+        if (isRetweet) {
+          await axios.delete(
+            `https://backlitter.onrender.com/retweetsQuotes?quoteId=${data._id}&userQuoteRetweet=${user?._id}`
+          );
+          toast.success("Quote Retweet Deleted");
+
+          if (onRefresh) {
+            onRefresh();
+          }
+        } else {
+          await axios.post("https://backlitter.onrender.com/retweetsQuotes", {
+            postId: data._id,
+            userQuoteRetweet: user._id,
+          });
+          toast.success("Quote Retweet Created");
+
+          if (onRefresh) {
+            onRefresh();
+          }
+        }
+      } catch (error) {
+        console.log("el error", error);
+        toast.error("Something went wrong");
+      }
+    },
+    [loginModal, user, data._id, isRetweet, session, router]
+  );
+
+  const debouncedOnRetweet = debounce(onRetweet, 1000);
+
   return (
     <div className="w-full">
       {data.userRetweet ? (
@@ -232,7 +280,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
       {data.userQuote ? (
         <div>
           {/* Quote User */}
-          <div className=" flex flex-row items-start gap-3">
+          <div className=" flex flex-row items-start gap-3" onClick={goToQuote}>
             <Avatar
               profileImage={data.userQuote.profileImage}
               userId={data.userQuote._id}
@@ -249,7 +297,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
                 >
                   @{data.userQuote.username}
                 </span>
-                <span className=" text-neutral-500 text-sm">{createdAt}</span>
+                <span className=" text-neutral-500 text-sm">{createdAt2}</span>
                 <div
                   className="flex justify-center items-center group absolute right-5 "
                   onClick={handleDropdownClick}
@@ -356,7 +404,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
                     <DropdownMenuItem
                       onClick={(event) => {
                         event.stopPropagation();
-                        // debouncedOnRetweet(event);
+                        debouncedOnRetweet(event);
                       }}
                       className="flex gap-x-2 w-full bg-black"
                     >
@@ -371,7 +419,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
                     <DropdownMenuItem
                       onClick={(event) => {
                         event.stopPropagation();
-                        // debouncedOnRetweet(event);
+                        debouncedOnRetweet(event);
                       }}
                       className="flex gap-x-2 w-full bg-black"
                     >

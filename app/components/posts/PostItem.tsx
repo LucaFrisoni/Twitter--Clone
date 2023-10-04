@@ -28,20 +28,15 @@ import {
 import PostItemRetweet from "./PostItemRetweet";
 import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
 import QuoteItem from "./QuoteItem";
+import QuoteItemRetweet from "./QuoteItemRetweet";
 
 interface PostItemProps {
   data: any;
   userId?: string;
   onRefresh?: () => void;
-
 }
 // export const revalidate = 0;
-const PostItem: React.FC<PostItemProps> = ({
-  data,
-  userId,
-  onRefresh,
-
-}) => {
+const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -58,6 +53,9 @@ const PostItem: React.FC<PostItemProps> = ({
       event.stopPropagation();
       if (data.userRetweet) {
         return router.push(`/users/${data.postId.user?._id}`);
+      }
+      if (data.userQuoteRetweet) {
+        return router.push(`/users/${data.quoteId.postId.user?._id}`);
       }
       router.push(`/users/${data.user?._id}`);
     },
@@ -105,7 +103,7 @@ const PostItem: React.FC<PostItemProps> = ({
             `https://backlitter.onrender.com/like?postId=${data._id}&currentUserId=${user?._id}`
           );
           toast.success("Post Unliked");
-       
+
           if (onRefresh) {
             onRefresh();
           }
@@ -116,7 +114,7 @@ const PostItem: React.FC<PostItemProps> = ({
             currentUserId: user._id,
           });
           toast.success("Post Liked");
-       
+
           if (onRefresh) {
             onRefresh();
           }
@@ -158,7 +156,7 @@ const PostItem: React.FC<PostItemProps> = ({
             `https://backlitter.onrender.com/retweets?postId=${data._id}&userRetweet=${user?._id}`
           );
           toast.success("Retweet Deleted");
-         
+
           if (onRefresh) {
             onRefresh();
           }
@@ -168,7 +166,7 @@ const PostItem: React.FC<PostItemProps> = ({
             userRetweet: user._id,
           });
           toast.success("Retweet Created");
-       
+
           if (onRefresh) {
             onRefresh();
           }
@@ -201,7 +199,7 @@ const PostItem: React.FC<PostItemProps> = ({
       );
       // router.refresh();
       toast.success("Tweet Deleted");
-   
+
       if (onRefresh) {
         onRefresh();
       }
@@ -231,18 +229,6 @@ const PostItem: React.FC<PostItemProps> = ({
   border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition relative"
       onClick={goToPost}
     >
-      {data.userRetweet ? (
-        <PostItemRetweet
-          loginModal={loginModal}
-          data={data}
-          goToUser={goToUser}
-          createdAt={createdAt}
-          onRefresh={onRefresh}
-        />
-      ) : null}
-
-      {data.userQuote ? <QuoteItem data={data} onRefresh={onRefresh} /> : null}
-
       {data.user ? (
         <div className=" flex flex-row items-start gap-3">
           <Avatar
@@ -406,6 +392,27 @@ const PostItem: React.FC<PostItemProps> = ({
             </div>
           </div>
         </div>
+      ) : null}
+
+      {data.userRetweet ? (
+        <PostItemRetweet
+          loginModal={loginModal}
+          data={data}
+          goToUser={goToUser}
+          createdAt={createdAt}
+          onRefresh={onRefresh}
+        />
+      ) : null}
+
+      {data.userQuote ? <QuoteItem data={data} onRefresh={onRefresh} /> : null}
+
+      {data.userQuoteRetweet ? (
+        <QuoteItemRetweet
+          loginModal={loginModal}
+          data={data}
+          onRefresh={onRefresh}
+          goToUser={goToUser}
+        />
       ) : null}
     </div>
   );
