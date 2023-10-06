@@ -3,10 +3,19 @@ import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { FaFeather } from "react-icons/fa";
 import useLoginModel from "@/hooks/zustandHooks/useLoginModel";
-const SidebarTweetButton = () => {
+
+interface SidebarTweetButton {
+  toggleSheet?: any;
+  mobile?: boolean;
+}
+
+const SidebarTweetButton = ({ toggleSheet, mobile }: SidebarTweetButton) => {
   const router = useRouter();
   const loginModal = useLoginModel();
   const onClick = useCallback(() => {
+    if (mobile) {
+      toggleSheet();
+    }
     loginModal.onOpen();
   }, [loginModal]);
 

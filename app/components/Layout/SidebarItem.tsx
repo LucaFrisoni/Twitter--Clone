@@ -13,6 +13,8 @@ interface SidebarItemProps {
   onClick?: () => void;
   auth?: boolean;
   alert?: boolean;
+  toggleSheet?: any;
+  mobile?: boolean;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -22,6 +24,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   onClick,
   auth,
   alert,
+  toggleSheet,
+  mobile,
 }) => {
   const router = useRouter();
 
@@ -37,6 +41,10 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     }
 
     if (href) {
+      if (mobile) {
+        toggleSheet();
+      }
+
       return router.push(href);
     }
   }, [router, onClick, href, session, auth, loginModal]);

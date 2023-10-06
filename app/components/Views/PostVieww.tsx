@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
@@ -69,7 +68,7 @@ const PostView: React.FC<PostViewProps> = ({
         placeholder="Tweet your reply"
         onRefresh={fetchData}
       />
-      <CommentFeed comments={post?.comments} />
+      <CommentFeed comments={post?.comments} onRefresh={fetchData} />
     </>
   );
 };

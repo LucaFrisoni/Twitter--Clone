@@ -73,6 +73,17 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
     [router, data]
   );
 
+  const goToQuote = useCallback(
+    (event: any) => {
+      event.stopPropagation();
+      if (data.userQuoteRetweet) {
+        return router.push(`/posts/${data.quoteIdDelete}`);
+      }
+      if (data.userQuote) router.push(`/posts/${data._id}`);
+    },
+    [router, data]
+  );
+
   useEffect(() => {
     setIsDataLoaded(!!data.likeIds);
   }, [data.likeIds]);
@@ -203,6 +214,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
       if (onRefresh) {
         onRefresh();
       }
+      router.push("/");
     } catch (error) {
       console.log(error);
       return toast.error("Something went wrong");
@@ -227,7 +239,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
     <div
       className="border-b-[1px]
   border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition relative"
-      onClick={goToPost}
+      onClick={data.userQuoteRetweet || data.userQuote ? goToQuote : goToPost}
     >
       {data.user ? (
         <div className=" flex flex-row items-start gap-3">
@@ -288,14 +300,16 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
               <p className="whitespace-pre-line break-words">{data.body}</p>
             </div>
             <div className=" flex flex-row items-center mt-3 gap-10">
-              <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
+              <div className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500 group">
+                <div className="bg-sky-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition "></div>
                 <AiOutlineMessage size={20} />
                 <p>{data.comments?.length || 0}</p>
               </div>
               {/* Retweet & Quote Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                  <div className="flex flex-row justify-center items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500 group">
+                    <div className="bg-emerald-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
                     {isRetweet ? (
                       <AiOutlineRetweet
                         className="text-emerald-500"
@@ -379,8 +393,9 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
                   event.stopPropagation();
                   debouncedOnLike(event);
                 }}
-                className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500"
+                className="flex flex-row justify-center items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500 group"
               >
+                <div className="bg-red-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
                 {isLiked ? (
                   <AiFillHeart color={"red"} size={20} />
                 ) : (

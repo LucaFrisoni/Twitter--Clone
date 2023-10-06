@@ -25,7 +25,11 @@ import { useDispatch } from "react-redux";
 import { logout, setUser } from "@/redux/actions";
 import axios from "axios";
 
-const Sidebar = () => {
+interface SideBarProps {
+  toggleSheet?: any;
+}
+
+const Sidebar = ({ toggleSheet }: SideBarProps) => {
   const { data: session, status } = useSession();
 
   const dispatch = useDispatch();
@@ -76,13 +80,14 @@ const Sidebar = () => {
   const handleLogOut = () => {
     signOut();
     dispatch(logout());
+    toggleSheet();
   };
 
   return (
-    <div className=" hidden sm:flex flex-col items-end  col-span-1 h-full pr-4 md:pr-6">
+    <div className=" col-span-1 h-full pr-4 md:pr-6">
       <div className=" flex flex-col items-end">
         <div className=" space-y-2 lg:w-[230px] ">
-          <Sidebarlogo />
+          <Sidebarlogo toggleSheet={toggleSheet} mobile={true} />
           {items.map((nav) => (
             <SidebarItem
               key={nav.href}
@@ -91,6 +96,8 @@ const Sidebar = () => {
               label={nav.label}
               auth={nav.auth}
               alert={nav.alert}
+              toggleSheet={toggleSheet}
+              mobile={true}
             />
           ))}
           {session?.user && (
@@ -98,10 +105,11 @@ const Sidebar = () => {
               icon={BiLogOut}
               onClick={() => handleLogOut()}
               label="logout"
+              toggleSheet={toggleSheet}
             />
           )}
 
-          <SidebarTweetButton />
+          <SidebarTweetButton toggleSheet={toggleSheet} mobile={true} />
         </div>
       </div>
     </div>

@@ -3,12 +3,21 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { BsTwitter } from "react-icons/bs";
 
-const Sidebarlogo = () => {
+interface SidebarLog {
+  toggleSheet?: any;
+  mobile?: boolean;
+}
+
+const Sidebarlogo = ({ toggleSheet, mobile }: SidebarLog) => {
   const router = useRouter();
 
   return (
     <div
       onClick={() => {
+        if (mobile) {
+          toggleSheet();
+        }
+
         router.push("/");
       }}
       className=" 

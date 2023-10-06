@@ -55,13 +55,6 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
     },
     [router, data]
   );
-  const goToQuote = useCallback(
-    (event: any) => {
-      event.stopPropagation();
-      router.push(`/posts/${data._id}`);
-    },
-    [router, data]
-  );
   const goToUser = useCallback(
     (event: any) => {
       event.stopPropagation();
@@ -108,6 +101,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
       if (onRefresh) {
         onRefresh();
       }
+      router.push("/");
       return toast.success("Quote Deleted");
     } catch (error) {
       console.log(error);
@@ -180,7 +174,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
     [loginModal, user, data._id, router, isLiked, session]
   );
 
-  const debouncedOnLike = debounce(onLike, 1000);
+  const debouncedOnLike = debounce(onLike, 3000);
 
   const onRetweet = useCallback(
     async (event: any) => {
@@ -217,7 +211,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
     [loginModal, user, data._id, isRetweet, session, router]
   );
 
-  const debouncedOnRetweet = debounce(onRetweet, 1000);
+  const debouncedOnRetweet = debounce(onRetweet, 3000);
 
   return (
     <div className="w-full">
@@ -280,7 +274,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
       {data.userQuote ? (
         <div>
           {/* Quote User */}
-          <div className=" flex flex-row items-start gap-3" onClick={goToQuote}>
+          <div className=" flex flex-row items-start gap-3">
             <Avatar
               profileImage={data.userQuote.profileImage}
               userId={data.userQuote._id}
@@ -374,14 +368,16 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
           </div>
           {/* Features */}
           <div className=" flex flex-row  items-center  mt-3 gap-10 ">
-            <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500 ml-[10%]">
+            <div className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500 ml-[10%] group">
+              <div className="bg-sky-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
               <AiOutlineMessage size={20} />
               <p>{data.comments?.length || 0}</p>
             </div>
             {/* Retweet & Quote Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                <div className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500 group">
+                  <div className="bg-emerald-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
                   {isRetweet ? (
                     <AiOutlineRetweet className="text-emerald-500" size={20} />
                   ) : (
@@ -438,8 +434,9 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
                 event.stopPropagation();
                 debouncedOnLike(event);
               }}
-              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500"
+              className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500 group"
             >
+              <div className="bg-red-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
               {isLiked ? (
                 <AiFillHeart color={"red"} size={20} />
               ) : (

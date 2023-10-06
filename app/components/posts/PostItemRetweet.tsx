@@ -189,14 +189,16 @@ const PostItemRetweet = ({
             <p className="whitespace-normal break-words">{data.postId.body}</p>
           </div>
           <div className=" flex flex-row items-center mt-3 gap-10">
-            <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
+            <div className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500 group">
+              <div className="bg-sky-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
               <AiOutlineMessage size={20} />
               <p>{data.postId.comments?.length || 0}</p>
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+                <div className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500 group">
+                  <div className="bg-emerald-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
                   {isRetweet ? (
                     <AiOutlineRetweet className="text-emerald-500" size={20} />
                   ) : (
@@ -277,8 +279,9 @@ const PostItemRetweet = ({
                 event.stopPropagation();
                 debouncedOnLike(event);
               }}
-              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500"
+              className="flex flex-row items-center justify-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500 group"
             >
+              <div className="bg-red-500/10 h-12 w-12 rounded-full absolute hidden group-hover:flex transition"></div>
               {isLiked ? (
                 <AiFillHeart color={"red"} size={20} />
               ) : (
