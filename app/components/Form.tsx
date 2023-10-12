@@ -166,7 +166,7 @@ const Form: React.FC<FormProps> = ({
             ) : null}
             {/* Nuevas features */}
             <div className=" mt-4 flex flex-row justify-between">
-              <div className="flex align-bottom">
+              <div className="hidden sm:flex align-bottom">
                 <Popover>
                   <PopoverTrigger>
                     <Smile className="text-sky-500  hover:text-sky-600  transition" />
