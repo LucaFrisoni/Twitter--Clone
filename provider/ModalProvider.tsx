@@ -9,6 +9,7 @@ import RegisterModal from "@/app/components/modals/RegisterModal";
 import React, { useEffect, useState } from "react";
 
 const ModalProvider = () => {
+  //hola
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

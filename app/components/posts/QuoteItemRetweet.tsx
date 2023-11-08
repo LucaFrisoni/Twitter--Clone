@@ -35,7 +35,7 @@ const QuoteItemRetweet = ({
   loginModal,
   onRefresh,
 }: PostItemRetweetProps) => {
-  console.log("Data =>", data);
+
   const { data: session, status } = useSession();
 
   const user = useSelector((state: any) => state.user);
