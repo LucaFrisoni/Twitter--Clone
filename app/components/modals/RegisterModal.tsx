@@ -44,6 +44,8 @@ const RegisterModal = () => {
       });
       toast.success("Account Created");
 
+
+      sessionStorage.setItem("newAccount", "true");
       registerModal.onClose();
       signIn("credentials", { email, password });
     } catch (error: any) {

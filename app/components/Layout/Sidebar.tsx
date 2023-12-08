@@ -46,6 +46,9 @@ const Sidebar = () => {
     fetchUser(); // Llamamos a la función aquí dentro del useEffect
   }, [fetchUser]);
 
+
+ 
+
   const items = [
     {
       icon: BsHouseFill,

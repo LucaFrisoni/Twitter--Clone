@@ -1,27 +1,45 @@
-import React from "react";
-import dynamic from "next/dynamic";
-
-const Avatar = dynamic(() => import("../Avatar"), {
-  loading: () => (
-    <div className=" flex justify-center items-center h-full">
-      <ClipLoader color="lightblue" size={80} />
-    </div>
-  ),
-});
-
+"use client";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
-export const revalidate = 0;
-const FollowBar = async () => {
-  // Error: Text content does not match server-rendered HTML.
+import Avatar from "../Avatar";
 
-  // Warning: Text content did not match. Server: "19 seconds" Client: "20 seconds"
+const FollowBar = () => {
+  const [allUsers, setAllUsersa] = useState([]);
+  const [refreshCounter, setRefreshCounter] = useState(0);
 
-  // See more info here: https://nextjs.org/docs/messages/react-hydration-error
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://backlitter.onrender.com/users`
+        );
+        setAllUsersa(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  const { data } = await axios.get("https://backlitter.onrender.com/users");
-  const users = data;
-  if (users.length === 0) {
+    fetchData();
+  }, [refreshCounter]);
+
+
+  useEffect(() => {
+    // Verificar si se creó una nueva cuenta
+    const cuentaNueva = sessionStorage.getItem("newAccount");
+
+    if (cuentaNueva === "true") {
+      // Actualizar el estado para forzar la recarga del useEffect
+      setRefreshCounter((prevCounter) => prevCounter + 1);
+
+      // Resetear el valor de sessionStorage.cuentaNueva
+      sessionStorage.removeItem("cuentaNueva");
+    }
+  }, []);
+
+
+
+  if (allUsers.length === 0) {
     return null;
   }
   return (
@@ -29,7 +47,7 @@ const FollowBar = async () => {
       <div className=" bg-neutral-800 rounded-xl p-4">
         <h2 className=" text-white text-xl font-semibold">Who to follow</h2>
         <div className=" flex flex-col gap-6 mt-4">
-          {users.map((user: any) => (
+          {allUsers.map((user: any) => (
             <div key={user._id} className=" flex flex-row gap-4">
               <Avatar userId={user._id} profileImage={user.profileImage} />
               <div className=" flex flex-col">

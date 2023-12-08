@@ -31,7 +31,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
 
   // Utiliza un operador ternario para decidir qué array mapear
   const tweetsToMap = allTweets ? allTweets : dataUserId || [];
-
+ 
   if (tweetsToMap == "No Posts available") {
     return (
       <p className="text-neutral-500 text-center p-2 ">
@@ -43,7 +43,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
   return (
     <>
       {isLoading ? (
-        <div className="flex justify-center items-center">
+        <div className="mt-4 flex justify-center items-center">
           <ClipLoader color="lightblue" size={80} />
         </div>
       ) : tweetsToMap.length > 0 ? (
@@ -56,7 +56,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
           />
         ))
       ) : (
-        <div className="flex justify-center items-center">
+        <div className=" mt-4 flex justify-center items-center">
           <ClipLoader color="lightblue" size={80} />
         </div>
       )}

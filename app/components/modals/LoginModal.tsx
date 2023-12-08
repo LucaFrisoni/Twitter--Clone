@@ -109,7 +109,7 @@ const LoginModal = () => {
           className=" text-white cursor-pointer hover:underline"
         >
           {" "}
-          Change Passwrod
+          Change Password
         </span>
       </p>
     </div>
