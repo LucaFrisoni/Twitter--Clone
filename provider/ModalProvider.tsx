@@ -4,6 +4,7 @@
 import ChangePasswordModal from "@/app/components/modals/ChangePasswordModal";
 import EditModal from "@/app/components/modals/EditModal";
 import LoginModal from "@/app/components/modals/LoginModal";
+import ProfileModal from "@/app/components/modals/ProfileModal";
 import QuoteModal from "@/app/components/modals/QuoteModal";
 import RegisterModal from "@/app/components/modals/RegisterModal";
 import React, { useEffect, useState } from "react";
@@ -27,6 +28,7 @@ const ModalProvider = () => {
     <EditModal />
     <ChangePasswordModal />
     <QuoteModal />
+    <ProfileModal />
     </div>
   );
 };

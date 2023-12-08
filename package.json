@@ -43,6 +43,7 @@
     "react-hot-toast": "2.4.1",
     "react-icons": "4.10.1",
     "react-image-file-resizer": "0.4.8",
+    "react-image-pan-zoom-rotate": "^1.6.0",
     "react-redux": "8.0.7",
     "react-spinners": "0.13.8",
     "redux": "4.2.1",

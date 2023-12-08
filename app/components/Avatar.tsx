@@ -1,5 +1,6 @@
 "use client";
 
+import useProfileModel from "@/hooks/zustandHooks/useProfileModal";
 import { User } from "@/types";
 import axios from "axios";
 import Image from "next/image";
@@ -12,6 +13,7 @@ interface AvatarProps {
   hasborder?: boolean;
   profileImage?: string;
   flag?: boolean;
+  Zoom?: boolean;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -20,6 +22,7 @@ const Avatar: React.FC<AvatarProps> = ({
   hasborder,
   profileImage,
   flag,
+  Zoom,
 }) => {
   const router = useRouter();
 
@@ -55,6 +58,11 @@ const Avatar: React.FC<AvatarProps> = ({
     [router, userId]
   );
 
+  const { onOpen } = useProfileModel();
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    onOpen(profileImage || "/images/placeholder.png");
+  };
   return (
     <div
       className={`
@@ -75,7 +83,7 @@ const Avatar: React.FC<AvatarProps> = ({
           borderRadius: "100%",
         }}
         alt="Avatar"
-        onClick={onClick}
+        onClick={Zoom ? handleClick : onClick}
         src={profileImage || user?.profileImage || "/images/placeholder.png"}
       />
     </div>
