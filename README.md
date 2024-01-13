@@ -15,7 +15,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## About this apliccation
+## About this aplication
 
 In this application, you will find an interface that closely resembles what Twitter looked like in the past. Here, you can create tweets, like them, and even leave comments on them.
 
