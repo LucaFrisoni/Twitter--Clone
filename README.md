@@ -21,7 +21,7 @@ In this application, you will find an interface that closely resembles what Twit
 
 We have a section dedicated to editing your profile, where you can adjust your name and choose a profile picture and banner that best suit your preferences. You can also follow your contacts and see how many followers and likes you have. Finally, we offer a small statistical module that allows you to view your likes and analyze their daily and weekly trends.
 
-## Stack tecnologico
+## Technological stack
 - **Frontend:**
   - Next.js
   - React
