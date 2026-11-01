@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import Header from "../../components/Header";
 
 import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 
 
@@ -16,16 +17,13 @@ const StaticksView = dynamic(() => import("../../components/Views/StaticksView")
 });
 
 
-export const revalidate = 1
-const StadisticsVieww = ({
-  params: { userId },
-}: {
-  params: { userId: string };
-}) => {
+const StadisticsVieww = () => {
+  const { userId } = useParams();
+
   return (
     <>
       <Header label="Stadistics" showBackArrow />
-      <StaticksView userId={userId}/>
+      <StaticksView userId={userId as string}/>
     </>
   );
 };

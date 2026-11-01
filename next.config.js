@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["res.cloudinary.com"], // Agrega el dominio de Cloudinary aquí
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
   },
 };
 
