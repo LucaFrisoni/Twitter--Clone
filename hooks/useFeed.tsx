@@ -27,6 +27,9 @@ const fetchFirstItems = async (target: number, userId?: string) => {
   return { items, hasMore };
 };
 
+const includesItem = (items: any[], item: any) =>
+  items.some(({ _id }) => _id === item._id);
+
 const useFeed = (userId?: string) => {
   const [tweets, setTweets] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(false);
@@ -68,9 +71,10 @@ const useFeed = (userId?: string) => {
     return runRequest(async () => {
       const last = current[current.length - 1];
       const page = await fetchPage(PAGE_SIZE, userId, last);
+      const newItems = page.filter((item) => !includesItem(current, item));
       return {
-        items: [...current, ...page],
-        hasMore: page.length === PAGE_SIZE,
+        items: [...current, ...newItems],
+        hasMore: newItems.length > 0 && page.length === PAGE_SIZE,
       };
     });
   }, [runRequest, userId]);
