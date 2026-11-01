@@ -52,10 +52,10 @@ const LoginModal = () => {
 
       if (result?.error) {
         // Manejar los errores en base a la información en result.error
-        if (result.error === "User not found") {
-          toast.error("Email not found");
-        } else if (result.error === "Wrong Password") {
-          toast.error("Incorrect password. Please try again.");
+        if (result.error === "Invalid credentials") {
+          toast.error("Incorrect email or password. Please try again.");
+        } else if (result.error === "Too many attempts") {
+          toast.error("Too many attempts. Try again in 15 minutes.");
         } else {
           toast.error("An error occurred. Please try again later.");
         }
@@ -103,7 +103,7 @@ const LoginModal = () => {
         </span>
       </p>
       <p>
-        Forgot Password?
+        Want a new password?
         <span
           onClick={onToggle2}
           className=" text-white cursor-pointer hover:underline"

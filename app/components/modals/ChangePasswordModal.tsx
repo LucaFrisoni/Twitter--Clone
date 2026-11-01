@@ -14,6 +14,7 @@ const ChangePasswordModal = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,16 @@ const ChangePasswordModal = () => {
         disabled={isLoading}
       />
       <Input
-        placeholder="Password"
+        placeholder="Current Password"
+        onChange={(e) => {
+          setCurrentPassword(e.target.value);
+        }}
+        value={currentPassword}
+        disabled={isLoading}
+        type="password"
+      />
+      <Input
+        placeholder="New Password"
         onChange={(e) => {
           setPassword(e.target.value);
         }}
@@ -52,16 +62,8 @@ const ChangePasswordModal = () => {
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      console.log(
-        "mail =>",
-        email,
-        "original =>",
-        password,
-        "confirm =>",
-        confirmPassword
-      );
       //TODO ADD LOGIN
-      if (!email || !password) {
+      if (!email || !currentPassword || !password) {
         return toast.error("You must enter you email and a password change");
       }
       if (password !== confirmPassword) {
@@ -69,15 +71,14 @@ const ChangePasswordModal = () => {
       }
       const result = await axios.put(
         "https://backlitter.onrender.com/passwordChange",
-        { email, password }
+        { email, currentPassword, password }
       );
       router.refresh();
       toast.success("Password Change");
       passwordModal.onClose();
     } catch (error: any) {
-      console.log("asd", error);
-      if (error.response.data == "User does not exist") {
-        return toast.error("User does not exist");
+      if (error.response.data == "Invalid email or current password") {
+        return toast.error("Invalid email or current password");
       }
       if (error.response.data == "Passwords are not the same") {
         return toast.error("Passwords are not the same");
@@ -89,7 +90,7 @@ const ChangePasswordModal = () => {
       //   setPassword("");
       //   setConfirmPassword("");
     }
-  }, [passwordModal, email, password, confirmPassword]);
+  }, [passwordModal, email, currentPassword, password, confirmPassword]);
 
   return (
     <Modal

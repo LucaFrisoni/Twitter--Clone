@@ -1,9 +1,9 @@
-import bcrypt from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-
 import axios from "axios";
+
+const SESSION_MAX_AGE = 30 * 24 * 60 * 60; // Igual que la duracion del token de la API
 
 const handler = NextAuth({
   providers: [
@@ -18,32 +18,42 @@ const handler = NextAuth({
           throw new Error("Email or Password missing");
         }
 
-        const response = await axios.get(
-          `https://backlitter.onrender.com/email/${credentials.email}`
-        );
+        try {
+          const { data } = await axios.post(
+            "https://backlitter.onrender.com/login",
+            { email: credentials.email, password: credentials.password }
+          );
 
-        const user = response.data;
-
-        if (!user || !user?.hashedPassword) {
-          throw new Error("User not found");
+          return {
+            id: data.user._id,
+            name: data.user.name,
+            email: data.user.email,
+            apiToken: data.token,
+          };
+        } catch (error: any) {
+          if (error.response?.status === 401) {
+            throw new Error("Invalid credentials");
+          }
+          if (error.response?.status === 429) {
+            throw new Error("Too many attempts");
+          }
+          throw new Error("Login failed");
         }
-
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.hashedPassword
-        );
-
-        if (!isCorrectPassword) {
-          throw new Error("Wrong Password");
-          return null; //
-        }
-
-        return user;
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) token.apiToken = user.apiToken;
+      return token;
+    },
+    session({ session, token }) {
+      session.apiToken = token.apiToken;
+      return session;
+    },
+  },
   debug: process.env.NODE_ENV == "development",
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: SESSION_MAX_AGE },
   jwt: { secret: process.env.NEXTAUTH_JWT_SECRET },
   secret: process.env.NEXTAUTH_SECRET,
 });

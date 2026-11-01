@@ -36,18 +36,21 @@ const Sidebar = ({ toggleSheet }: SideBarProps) => {
 
   const [user, setUserr] = useState<User | null>(null);
   const fetchUser = useCallback(async () => {
-    if (session) {
-      const { data } = await axios.get(
-        `https://backlitter.onrender.com/email/${session?.user?.email}`
-      );
+    if (session?.apiToken) {
+      const { data } = await axios.get("https://backlitter.onrender.com/me", {
+        headers: { Authorization: `Bearer ${session.apiToken}` },
+      });
       const user = data;
       setUserr(user);
       dispatch(setUser(user));
+    } else if (session) {
+      // Sesion iniciada antes de que existiera el token de la API
+      signOut();
     }
   }, [session, dispatch]);
 
   useEffect(() => {
-    fetchUser(); // Llamamos a la función aquí dentro del useEffect
+    fetchUser().catch(console.error); // Llamamos a la función aquí dentro del useEffect
   }, [fetchUser]);
 
   const items = [
