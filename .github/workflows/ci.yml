@@ -1,0 +1,69 @@
+# Checks every push and publishes main to production only after the staged build works.
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency: production
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Require the Vercel secrets
+        run: |
+          if [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ] || [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Missing VERCEL_TOKEN, VERCEL_ORG_ID or VERCEL_PROJECT_ID repository secrets"
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm install --global vercel@65.9.0
+      - run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - run: vercel build --prod --token="$VERCEL_TOKEN"
+      - name: Stage the build without touching the live site
+        id: stage
+        run: echo "url=$(vercel deploy --prebuilt --prod --skip-domain --token="$VERCEL_TOKEN")" >> "$GITHUB_OUTPUT"
+      - name: Check the staged build
+        env:
+          STAGED_URL: ${{ steps.stage.outputs.url }}
+        run: |
+          for path in / /api/auth/providers; do
+            vercel curl "$path" --deployment "$STAGED_URL" --yes --token="$VERCEL_TOKEN" -- --fail --silent --show-error --output /dev/null
+          done
+      - name: Publish to production
+        env:
+          STAGED_URL: ${{ steps.stage.outputs.url }}
+        run: vercel promote "$STAGED_URL" --yes --token="$VERCEL_TOKEN"

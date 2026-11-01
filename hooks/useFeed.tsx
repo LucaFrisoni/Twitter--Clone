@@ -1,6 +1,7 @@
 // Loads a timeline page by page and keeps it in sync after likes, retweets or new tweets.
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { mergeFeedPage } from "@/lib/mergeFeedPage";
 
 const POSTS_URL = "https://backlitter.onrender.com/posts";
 const PAGE_SIZE = 20;
@@ -26,9 +27,6 @@ const fetchFirstItems = async (target: number, userId?: string) => {
   }
   return { items, hasMore };
 };
-
-const includesItem = (items: any[], item: any) =>
-  items.some(({ _id }) => _id === item._id);
 
 const useFeed = (userId?: string) => {
   const [tweets, setTweets] = useState<any[]>([]);
@@ -71,11 +69,7 @@ const useFeed = (userId?: string) => {
     return runRequest(async () => {
       const last = current[current.length - 1];
       const page = await fetchPage(PAGE_SIZE, userId, last);
-      const newItems = page.filter((item) => !includesItem(current, item));
-      return {
-        items: [...current, ...newItems],
-        hasMore: newItems.length > 0 && page.length === PAGE_SIZE,
-      };
+      return mergeFeedPage(current, page, PAGE_SIZE);
     });
   }, [runRequest, userId]);
 
