@@ -18,6 +18,7 @@ const UserHero: React.FC<UserHeroProps> = ({ user }) => {
           <Image
             src={user.user.coverImage}
             fill
+            sizes="(min-width: 1024px) 576px, 100vw"
             alt="cover image"
             style={{ objectFit: "cover" }}
             onClick={()=>{onOpen(user.user.coverImage || "/images/Noimage.jpg")}}
@@ -30,7 +31,6 @@ const UserHero: React.FC<UserHeroProps> = ({ user }) => {
             userId={user?.user._id}
             isLarge
             hasborder
-            flag={true}
           />
         </div>
       </div>

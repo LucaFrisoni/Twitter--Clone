@@ -12,7 +12,7 @@ import Button from "./Button";
 import Avatar from "./Avatar";
 import { useSelector } from "react-redux";
 import debounce from "lodash.debounce";
-import EmojiPicker from "emoji-picker-react";
+import dynamic from "next/dynamic";
 import {
   Popover,
   PopoverContent,
@@ -21,6 +21,8 @@ import {
 import { Smile } from "lucide-react";
 import QuoteItem from "./posts/QuoteItem";
 import useQuoteModel from "@/hooks/zustandHooks/useQuoteModal";
+
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 interface FormProps {
   placeholder: string;
@@ -135,7 +137,6 @@ const Form: React.FC<FormProps> = ({
             <Avatar
               profileImage={user?.profileImage}
               userId={user?._id}
-              flag={true}
             />{" "}
           </div>
           <div className=" w-full ">

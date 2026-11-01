@@ -3,18 +3,24 @@ import React, { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { ClipLoader } from "react-spinners";
 import PostItem from "./PostItem";
+import LoadMoreSentinel from "./LoadMoreSentinel";
+import FeedLoader from "./FeedLoader";
 
 interface PostFeedProps {
   userId?: string;
-  allTweets?: Post[];
-  dataUserId?: any;
+  allTweets: Post[];
+  hasMore: boolean;
+  isLoaded: boolean;
+  onLoadMore: () => void;
   onRefresh?: () => void; // Cambia el tipo de allTweets a Post[]
 }
 
 const PostFeed: React.FC<PostFeedProps> = ({
   userId,
   allTweets,
-  dataUserId,
+  hasMore,
+  isLoaded,
+  onLoadMore,
   onRefresh,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -29,10 +35,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
     return null;
   }
 
-  // Utiliza un operador ternario para decidir qué array mapear
-  const tweetsToMap = allTweets ? allTweets : dataUserId || [];
- 
-  if (tweetsToMap == "No Posts available") {
+  if (isLoaded && allTweets.length === 0) {
     return (
       <p className="text-neutral-500 text-center p-2 ">
         This account does not have any Tweet yet
@@ -46,19 +49,22 @@ const PostFeed: React.FC<PostFeedProps> = ({
         <div className="mt-4 flex justify-center items-center">
           <ClipLoader color="lightblue" size={80} />
         </div>
-      ) : tweetsToMap.length > 0 ? (
-        tweetsToMap.map((tweet: Post) => (
-          <PostItem
-            userId={userId}
-            key={tweet._id}
-            data={tweet}
-            onRefresh={onRefresh}
-          />
-        ))
+      ) : allTweets.length > 0 ? (
+        <>
+          {allTweets.map((tweet: Post) => (
+            <PostItem
+              userId={userId}
+              key={tweet._id}
+              data={tweet}
+              onRefresh={onRefresh}
+            />
+          ))}
+          {hasMore && (
+            <LoadMoreSentinel key={allTweets.length} onVisible={onLoadMore} />
+          )}
+        </>
       ) : (
-        <div className=" mt-4 flex justify-center items-center">
-          <ClipLoader color="lightblue" size={80} />
-        </div>
+        <FeedLoader />
       )}
     </>
   );

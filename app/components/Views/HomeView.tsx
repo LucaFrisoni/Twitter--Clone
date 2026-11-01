@@ -1,39 +1,23 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Header from "../Header";
 import Form from "../Form";
 import PostFeed from "../posts/PostFeed";
-import axios from "axios";
+import useFeed from "@/hooks/useFeed";
 
 const HomeView = () => {
-  const [allPostsData, setAllPostsData] = useState([]);
-  const [refreshCounter, setRefreshCounter] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `https://backlitter.onrender.com/posts`
-        );
-        setAllPostsData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [refreshCounter]); // Agregar refreshCounter como dependencia
+  const { tweets, hasMore, isLoaded, refresh, loadMore } = useFeed();
 
   return (
     <div>
       <Header label="Home" />
-      <Form
-        placeholder="What's happening?"
-        onRefresh={() => setRefreshCounter((prev) => prev + 1)}
-      />
+      <Form placeholder="What's happening?" onRefresh={refresh} />
       <PostFeed
-        allTweets={allPostsData}
-        onRefresh={() => setRefreshCounter((prev) => prev + 1)}
+        allTweets={tweets}
+        hasMore={hasMore}
+        isLoaded={isLoaded}
+        onLoadMore={loadMore}
+        onRefresh={refresh}
       />
     </div>
   );

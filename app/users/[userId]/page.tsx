@@ -74,6 +74,7 @@ import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { useParams } from "next/navigation";
+import useFeed from "@/hooks/useFeed";
 const UserHero = dynamic(() => import("@/app/components/users/UserHero"), {
   ssr: false,
   loading: () => (
@@ -103,31 +104,29 @@ const UserView = () => {
   const { userId } = useParams();
   // Declara las variables con tipos iniciales
 
-  const [userPostsData, setuserPostsData] = useState<any>(null);
+  const feed = useFeed(userId as string);
   const [user, setuser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const fetchData = async () => {
+  const fetchUser = async () => {
     try {
-      setLoading(true);
       const { data } = await axios.get(
         `https://backlitter.onrender.com/users/${userId}`
       );
       setuser(data);
-      const { data: postsData } = await axios.get(
-        `https://backlitter.onrender.com/posts?userId=${userId}`
-      );
-      setuserPostsData(postsData);
-      setLoading(false); // Asigna el valor a userPostsData
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const refreshProfile = () => {
+    fetchUser();
+    feed.refresh();
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchUser();
   }, []);
 
-  if (loading) {
+  if (!user) {
     return (
       <div className="flex justify-center items-center h-full">
         <ClipLoader color="lightblue" size={80} />
@@ -139,7 +138,13 @@ const UserView = () => {
       <Header showBackArrow label={user?.user.name} />
       <UserHero user={user} />
       <UserBio user={user} />
-      <PostFeed dataUserId={userPostsData} onRefresh={fetchData} />
+      <PostFeed
+        allTweets={feed.tweets}
+        hasMore={feed.hasMore}
+        isLoaded={feed.isLoaded}
+        onLoadMore={feed.loadMore}
+        onRefresh={refreshProfile}
+      />
     </>
   );
 };

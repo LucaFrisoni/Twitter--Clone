@@ -221,12 +221,11 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
     }
   };
 
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  if (!isMounted) {
+  // Una cita cuyo tweet original fue eliminado no tiene contenido que mostrar
+  const isOrphanQuote =
+    (data.userQuote && !data.postId) ||
+    (data.userQuoteRetweet && !data.quoteId?.postId);
+  if (isOrphanQuote) {
     return null;
   }
 
@@ -267,7 +266,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId, onRefresh }) => {
                 <div className="bg-sky-500/10 h-9 w-9 rounded-full absolute hidden group-hover:flex transition"></div>
                 <div className=" z-20">
                   {/* Delete Menu */}
-                  {data.user.email == user?.email ? (
+                  {data.user._id == user?._id ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger>
                         <FiMoreHorizontal className=" text-neutral-500 hover:text-sky-700 transition  " />

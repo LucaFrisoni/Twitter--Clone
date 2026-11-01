@@ -299,7 +299,7 @@ const QuoteItem = ({ data, onRefresh, userView }: QuoteItemProps) => {
                   <div className="bg-sky-500/10 h-9 w-9 rounded-full absolute hidden group-hover:flex transition"></div>
                   <div className=" z-20">
                     {/* Delete Menu */}
-                    {data.userQuote.email == user?.email ? (
+                    {data.userQuote._id == user?._id ? (
                       <DropdownMenu>
                         <DropdownMenuTrigger>
                           <FiMoreHorizontal className=" text-neutral-500 hover:text-sky-700 transition  " />
